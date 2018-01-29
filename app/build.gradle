@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     compileSdkVersion 27
     defaultConfig {
@@ -10,11 +14,33 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+
+    signingConfigs {
+        release {
+            storeFile file('keystore.jks')
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            it.buildConfigField 'String', 'MOVIE_API_KEY', keystoreProperties['TheMoviApiKeyRelease']
+            signingConfig signingConfigs.release
         }
+
+        debug {
+            minifyEnabled false
+            it.buildConfigField 'String', 'MOVIE_API_KEY', keystoreProperties['TheMovieApiKeyDebug']
+        }
+    }
+
+    buildTypes.each {
+        it.buildConfigField 'String', 'MESSAGE', keystoreProperties['message']
     }
 }
 
