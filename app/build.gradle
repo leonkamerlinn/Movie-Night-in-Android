@@ -1,8 +1,9 @@
 apply plugin: 'com.android.application'
 
-def keystorePropertiesFile = rootProject.file("keystore.properties")
-def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+def debugKeystore = rootProject.file("keystore_debug.properties")
+def releaseKeystore = rootProject.file("keystore_release.properties")
+def properties = new Properties()
+properties.load(new FileInputStream(debugKeystore))
 
 android {
     compileSdkVersion 27
@@ -19,9 +20,9 @@ android {
     signingConfigs {
         release {
             storeFile file('keystore.jks')
-            storePassword keystoreProperties['storePassword']
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
+            storePassword properties['storePassword']
+            keyAlias properties['keyAlias']
+            keyPassword properties['keyPassword']
         }
     }
 
@@ -29,18 +30,18 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            it.buildConfigField 'String', 'MOVIE_API_KEY', keystoreProperties['TheMoviApiKeyRelease']
+            it.buildConfigField 'String', 'MOVIE_API_KEY', properties['TheMoviApiKeyRelease']
             signingConfig signingConfigs.release
         }
 
         debug {
             minifyEnabled false
-            it.buildConfigField 'String', 'MOVIE_API_KEY', keystoreProperties['TheMovieApiKeyDebug']
+            it.buildConfigField 'String', 'MOVIE_API_KEY', properties['TheMovieApiKeyDebug']
         }
     }
 
     buildTypes.each {
-        it.buildConfigField 'String', 'MESSAGE', keystoreProperties['message']
+        it.buildConfigField 'String', 'MESSAGE', properties['message']
     }
 }
 
