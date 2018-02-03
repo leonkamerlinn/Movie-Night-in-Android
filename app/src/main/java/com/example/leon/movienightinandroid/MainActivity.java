@@ -4,7 +4,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.example.leon.movienightinandroid.databinding.HelloBinding;
+import com.example.leon.movienightinandroid.databinding.ActivityMainBinding;
 import com.example.leon.movienightinandroid.di.component.DaggerMainActivityComponent;
 import com.example.leon.movienightinandroid.di.component.MainActivityComponent;
 import com.example.leon.movienightinandroid.di.module.ActivityModule;
@@ -26,8 +26,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        HelloBinding binding = DataBindingUtil.setContentView(this, R.layout.hello);
-        User user = new User("Test", "User");
+        getActivityComponent().inject(this);
+        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        User user = new User("Leon", "Kamerlin");
         binding.setUser(user);
     }
 }
