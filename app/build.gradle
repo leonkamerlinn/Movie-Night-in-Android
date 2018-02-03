@@ -1,15 +1,11 @@
 apply plugin: 'com.android.application'
 
 
-def debugKeystore = rootProject.file("keystore_debug.properties")
-def releaseKeystore = rootProject.file("keystore_release.properties")
+def keystore = rootProject.file("keystore.properties")
 def properties = new Properties()
-properties.load(new FileInputStream(debugKeystore))
+properties.load(new FileInputStream(keystore))
 
 android {
-    dataBinding {
-        enabled = true
-    }
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.example.leon.movienightinandroid"
@@ -18,12 +14,22 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
 
     signingConfigs {
         release {
-            storeFile file('keystore.jks')
+            storeFile rootProject.file('app/keystore.jks')
             storePassword properties['storePassword']
             keyAlias properties['keyAlias']
             keyPassword properties['keyPassword']
@@ -32,24 +38,28 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            it.buildConfigField 'String', 'MOVIE_API_KEY', properties['TheMoviApiKeyRelease']
+
             signingConfig signingConfigs.release
+            it.buildConfigField 'String', 'MOVIE_API_KEY', properties['TheMovieApiKeyRelease']
         }
 
         debug {
-            minifyEnabled false
             it.buildConfigField 'String', 'MOVIE_API_KEY', properties['TheMovieApiKeyDebug']
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+
 
     buildTypes.each {
         it.buildConfigField 'String', 'MESSAGE', properties['message']
     }
 
 
-}
+} // end android
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -79,6 +89,10 @@ dependencies {
 
     //gson
     implementation 'com.google.code.gson:gson:2.8.2'
+
+
+    //multidex
+    implementation 'com.android.support:multidex:1.0.2'
 
 
     //dagger2 di
