@@ -1,11 +1,15 @@
 apply plugin: 'com.android.application'
 
+
 def debugKeystore = rootProject.file("keystore_debug.properties")
 def releaseKeystore = rootProject.file("keystore_release.properties")
 def properties = new Properties()
 properties.load(new FileInputStream(debugKeystore))
 
 android {
+    dataBinding {
+        enabled = true
+    }
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.example.leon.movienightinandroid"
@@ -43,11 +47,14 @@ android {
     buildTypes.each {
         it.buildConfigField 'String', 'MESSAGE', properties['message']
     }
+
+
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:27.0.2'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.android.support:recyclerview-v7:27.0.2'
