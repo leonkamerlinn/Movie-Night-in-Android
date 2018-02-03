@@ -1,7 +1,7 @@
 package com.example.leon.movienightinandroid;
 
-import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDexApplication;
 
 import com.example.leon.movienightinandroid.di.component.ApplicationComponent;
 import com.example.leon.movienightinandroid.di.component.DaggerApplicationComponent;
@@ -12,7 +12,7 @@ import com.example.leon.movienightinandroid.di.module.ApplicationModule;
  * Created by Leon on 2.2.2018..
  */
 
-public class DemoApplication extends Application {
+public class DemoApplication extends MultiDexApplication {
 
     protected ApplicationComponent applicationComponent;
 
