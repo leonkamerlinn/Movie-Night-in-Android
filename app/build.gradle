@@ -40,13 +40,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
             signingConfig signingConfigs.release
-            it.buildConfigField 'String', 'MOVIE_API_KEY', properties['TheMovieApiKeyRelease']
         }
 
         debug {
-            it.buildConfigField 'String', 'MOVIE_API_KEY', properties['TheMovieApiKeyDebug']
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -56,6 +53,8 @@ android {
 
     buildTypes.each {
         it.buildConfigField 'String', 'MESSAGE', properties['message']
+        it.buildConfigField 'String', 'API_KEY', properties['API_KEY']
+        it.buildConfigField 'String', 'ACCESS_TOKEN_V4_AUTH', properties['ACCESS_TOKEN_V4_AUTH']
     }
 
 
