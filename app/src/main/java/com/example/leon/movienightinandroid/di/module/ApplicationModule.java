@@ -8,7 +8,6 @@ import com.example.leon.movienightinandroid.di.qulifier.ApplicationContext;
 import dagger.Module;
 import dagger.Provides;
 
-
 /**
  * Created by Leon on 2.2.2018..
  */

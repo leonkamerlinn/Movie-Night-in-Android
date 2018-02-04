@@ -3,7 +3,6 @@ package com.example.leon.movienightinandroid.di.component;
 import android.content.Context;
 
 import com.example.leon.movienightinandroid.DemoApplication;
-import com.example.leon.movienightinandroid.api.moviedb.UrlContracts;
 import com.example.leon.movienightinandroid.di.module.ApplicationModule;
 import com.example.leon.movienightinandroid.di.qulifier.ApplicationContext;
 import com.example.leon.movienightinandroid.di.scopes.ApplicationScope;
@@ -23,6 +22,6 @@ public interface ApplicationComponent {
     @ApplicationContext
     Context getContext();
 
-    UrlContracts.TheMovieService getService();
+
 
 }

@@ -1,12 +1,8 @@
 package com.example.leon.movienightinandroid.di.module;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
 import com.example.leon.movienightinandroid.BuildConfig;
 import com.example.leon.movienightinandroid.api.moviedb.UrlContracts;
-import com.example.leon.movienightinandroid.di.qulifier.ApplicationContext;
-import com.example.leon.movienightinandroid.di.qulifier.DatabaseInfo;
+import com.example.leon.movienightinandroid.di.qulifier.TheMovieDb;
 
 import dagger.Module;
 import dagger.Provides;
@@ -20,27 +16,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by Leon on 2.2.2018..
  */
 
-@Module(includes = ApplicationModule.class)
-public class InfoModule {
-    @Provides
-    @DatabaseInfo
-    String provideDatabaseName() {
-        return "demo-dagger.db";
-    }
+@Module(includes = {ApplicationModule.class})
+public class MovieDbModule {
 
     @Provides
-    @DatabaseInfo
-    Integer provideDatabaseVersion() {
-        return 2;
-    }
-
-    @Provides
-    SharedPreferences provideSharedPrefs(@ApplicationContext Context context) {
-        return context.getSharedPreferences("demo-prefs", Context.MODE_PRIVATE);
-    }
-
- /*   @Provides
-    @ApplicationContext
     UrlContracts.TheMovieService provideMovieService() {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
@@ -63,6 +42,6 @@ public class InfoModule {
 
         UrlContracts.TheMovieService movieService = retrofit.create(UrlContracts.TheMovieService.class);
         return movieService;
-    }*/
-}
+    }
 
+}
