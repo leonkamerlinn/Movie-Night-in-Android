@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.multidex.MultiDexApplication;
 
 import com.example.leon.movienightinandroid.di.component.ApplicationComponent;
-import com.example.leon.movienightinandroid.di.component.DaggerApplicationComponent;
+
 import com.example.leon.movienightinandroid.di.module.ApplicationModule;
 
 
