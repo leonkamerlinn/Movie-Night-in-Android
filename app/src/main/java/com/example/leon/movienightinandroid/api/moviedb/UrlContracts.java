@@ -1,5 +1,6 @@
 package com.example.leon.movienightinandroid.api.moviedb;
 
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -16,7 +17,7 @@ public class UrlContracts {
 
     public interface TheMovieService {
         @GET(UrlContracts.DISCOVER_MOVIES_PATH)
-        Call<Page> listMovies(
+        Observable<Page> listMovies(
                 @Query(UrlContracts.PAGE_QUERY) int page
         );
     }
