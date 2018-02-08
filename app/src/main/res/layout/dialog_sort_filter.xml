@@ -86,12 +86,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:entries="@array/sort_items"/>
+            android:entries="@array/filter_gener_items"/>
 
     </LinearLayout>
 
 
     <LinearLayout
+        android:id="@+id/last"
         android:layout_width="0dp"
         android:layout_height="19dp"
         android:layout_marginEnd="8dp"
@@ -113,7 +114,39 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:entries="@array/sort_items"/>
+            android:entries="@array/filter_years_items"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="19dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/last">
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Rating" />
+
+        <RatingBar
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:stepSize="0.5"
+            android:isIndicator="true"
+
+            style="?android:attr/ratingBarStyleSmall"
+            android:numStars="10"/>
+
 
     </LinearLayout>
 
