@@ -3,12 +3,18 @@ package com.example.leon.movienightinandroid;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.leon.movienightinandroid.api.moviedb.MovieRecyclerViewAdapter;
+import com.example.leon.movienightinandroid.api.moviedb.dialog.SortFilterDialog;
 import com.example.leon.movienightinandroid.databinding.ActivityMainBinding;
 import com.example.leon.movienightinandroid.di.component.DaggerMainActivityComponent;
 import com.example.leon.movienightinandroid.di.component.MainActivityComponent;
@@ -44,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         User user = new User(BuildConfig.ACCESS_TOKEN_V4_AUTH, BuildConfig.API_KEY);
         binding.setUser(user);
-
+        setSupportActionBar(binding.toolbar);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
@@ -73,9 +79,28 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.option_menu, menu);
 
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_sort:
+                DialogFragment dialog = new SortFilterDialog();
+                dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
+
+                break;
+
+            default:
+                break;
+        }
+        return true;
+    }
 }

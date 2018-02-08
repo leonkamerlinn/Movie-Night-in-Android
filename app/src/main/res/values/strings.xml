@@ -1,3 +1,13 @@
 <resources>
 	<string name="app_name">Movie Night in Android</string>
+    <string name="sort_by">Sort by</string>
+    <string name="sort">Sort</string>
+
+
+    <string-array name="sort_items">
+        <item>popularity</item>
+        <item>rating</item>
+        <item>votes</item>
+        <item>release date</item>
+    </string-array>
 </resources>
