@@ -1,6 +1,7 @@
 package com.example.leon.movienightinandroid.api.moviedb.dialog;
 
 import android.app.Dialog;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,67 +10,40 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
+import android.widget.Toast;
 
 import com.example.leon.movienightinandroid.R;
+import com.example.leon.movienightinandroid.databinding.DialogSortFilterBinding;
+import com.jakewharton.rxbinding2.widget.RxAdapterView;
+
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by Leon on 8.2.2018..
  */
 
 public class SortFilterDialog extends DialogFragment {
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        /*// Use the Builder class for convenient dialog construction
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(R.string.app_name)
-                .setPositiveButton(R.string.lb_onboarding_accessibility_next, (dialog, id) -> {
-                    // FIRE ZE MISSILES!
-                })
-                .setNegativeButton(R.string.lb_onboarding_accessibility_next, (dialog, id) -> {
-                    // User cancelled the dialog
+
+        DialogSortFilterBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout. dialog_sort_filter, null, false);
+
+        String[] sortItems = getResources().getStringArray(R.array.sort_items);
+        RxAdapterView.itemSelections(binding.sortSpinner)
+                .subscribe(integer -> {
+                    Toast.makeText(getContext(), sortItems[integer], Toast.LENGTH_LONG).show();
                 });
-        // Create the AlertDialog object and return it
-        return builder.create();*/
 
+        return new AlertDialog.Builder(binding.getRoot().getContext())
+                .setView(binding.getRoot())
+                .setPositiveButton(R.string.apply, (dialog, id) -> {
 
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        // Get the layout inflater
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-
-        View rootView = inflater.inflate(R.layout.dialog_sort_filter, null);
-/*
-        Spinner spinner = rootView.findViewById(R.id.spinner);
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String value = getResources().getStringArray(R.array.sort_items)[position];
-
-                Toast.makeText(getContext(), value, Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });*/
-
-
-        // Inflate and set the layout for the dialog
-        // Pass null as the parent view because its going in the dialog layout
-        builder.setView(rootView)
-                // Add action buttons
-                .setPositiveButton(R.string.lb_onboarding_accessibility_next, (dialog, id) -> {
-                    // sign in the user ...
                 })
-                .setNegativeButton(R.string.lb_onboarding_accessibility_next, (dialog, id) -> getDialog().cancel());
-        return builder.create();
+                .setNegativeButton(R.string.cancel, (dialog, id) -> getDialog().cancel())
+                .create();
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
+
 }

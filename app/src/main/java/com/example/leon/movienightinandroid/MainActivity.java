@@ -1,5 +1,7 @@
 package com.example.leon.movienightinandroid;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
@@ -7,6 +9,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     private MainActivityComponent activityComponent;
     private ActivityMainBinding binding;
+    private SearchView searchView;
 
     public MainActivityComponent getActivityComponent() {
         if (activityComponent == null) {
@@ -86,7 +90,46 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.option_menu, menu);
 
+
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+
+        // listening to search query text change
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // filter recycler view when query submitted
+                Toast.makeText(MainActivity.this, query, Toast.LENGTH_LONG).show();
+                getSupportActionBar().setTitle(query);
+                searchView.setQuery(null, false);
+                searchView.setIconified(true);
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                // filter recycler view when text is changed
+
+                return false;
+            }
+        });
+
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        // close search view on back button pressed
+        if (!searchView.isIconified()) {
+            searchView.setQuery(null, false);
+            searchView.setIconified(true);
+            return;
+        }
+        super.onBackPressed();
     }
 
     @Override
