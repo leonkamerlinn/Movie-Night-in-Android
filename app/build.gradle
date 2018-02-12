@@ -82,6 +82,9 @@ dependencies {
     implementation "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:$rxbinding_version"
     implementation "com.jakewharton.rxbinding2:rxbinding-leanback-v17:$rxbinding_version"
 
+   /* implementation "com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar"
+    implementation "com.f2prateek.rx.receivers:rx-receivers:0.1.0"*/
+
     //retrofit
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"

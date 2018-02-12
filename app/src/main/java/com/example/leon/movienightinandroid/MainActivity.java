@@ -3,7 +3,6 @@ package com.example.leon.movienightinandroid;
 import android.app.SearchManager;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +12,6 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.leon.movienightinandroid.api.moviedb.MovieRecyclerViewAdapter;
@@ -28,14 +26,15 @@ import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity {
 
-
-
     @Inject
     MovieRecyclerViewAdapter mMovieRecyclerViewAdapter;
+    @Inject
+    ActivityMainBinding binding;
+
+
 
     private MainActivityComponent activityComponent;
-    private ActivityMainBinding binding;
-    private SearchView searchView;
+    private SearchView mSearchView;
 
     public MainActivityComponent getActivityComponent() {
         if (activityComponent == null) {
@@ -51,10 +50,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActivityComponent().inject(this);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        User user = new User(BuildConfig.ACCESS_TOKEN_V4_AUTH, BuildConfig.API_KEY);
-        binding.setUser(user);
         setSupportActionBar(binding.toolbar);
+
+
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
@@ -83,7 +81,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -93,19 +94,19 @@ public class MainActivity extends AppCompatActivity {
 
         // Associate searchable configuration with the SearchView
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setMaxWidth(Integer.MAX_VALUE);
+        mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        mSearchView.setMaxWidth(Integer.MAX_VALUE);
 
         // listening to search query text change
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // filter recycler view when query submitted
                 Toast.makeText(MainActivity.this, query, Toast.LENGTH_LONG).show();
                 getSupportActionBar().setTitle(query);
-                searchView.setQuery(null, false);
-                searchView.setIconified(true);
+                mSearchView.setQuery(null, false);
+                mSearchView.setIconified(true);
 
                 return false;
             }
@@ -124,9 +125,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         // close search view on back button pressed
-        if (!searchView.isIconified()) {
-            searchView.setQuery(null, false);
-            searchView.setIconified(true);
+        if (!mSearchView.isIconified()) {
+            mSearchView.setQuery(null, false);
+            mSearchView.setIconified(true);
             return;
         }
         super.onBackPressed();
@@ -136,9 +137,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item_sort:
-                DialogFragment dialog = new SortFilterDialog();
-                dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
-
+                SortFilterDialog.newInstance().show(getSupportFragmentManager(), SortFilterDialog.TAG);
                 break;
 
             default:

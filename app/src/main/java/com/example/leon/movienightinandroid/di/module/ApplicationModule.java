@@ -31,4 +31,11 @@ public class ApplicationModule {
     Application provideApplication() {
         return mApplication;
     }
+
+
+    @Provides
+    String provideMessage() {
+        return SortFilterDialogModule.class.getSimpleName();
+    }
+
 }

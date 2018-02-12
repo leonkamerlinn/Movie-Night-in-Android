@@ -3,7 +3,7 @@
 	package="com.example.leon.movienightinandroid">
 	
 	<uses-permission android:name="android.permission.INTERNET" />
-	
+
 	<application
 		android:name=".DemoApplication"
 		android:allowBackup="true"
