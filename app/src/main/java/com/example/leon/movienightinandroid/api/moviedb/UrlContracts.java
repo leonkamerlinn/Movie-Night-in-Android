@@ -1,7 +1,8 @@
 package com.example.leon.movienightinandroid.api.moviedb;
 
+import com.example.leon.movienightinandroid.api.moviedb.model.Page;
+
 import io.reactivex.Observable;
-import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 

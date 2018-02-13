@@ -1,13 +1,5 @@
 package com.example.leon.movienightinandroid.di.module;
 
-import android.app.Activity;
-import android.databinding.DataBindingUtil;
-
-import com.example.leon.movienightinandroid.BuildConfig;
-import com.example.leon.movienightinandroid.R;
-import com.example.leon.movienightinandroid.User;
-import com.example.leon.movienightinandroid.databinding.ActivityMainBinding;
-
 import dagger.Module;
 import dagger.Provides;
 
@@ -16,16 +8,14 @@ import dagger.Provides;
  */
 
 @Module
-public class SortFilterDialogModule {
-
-
+public abstract class SortFilterDialogModule {
     @Provides
-    String provideMessage() {
-        return SortFilterDialogModule.class.getSimpleName();
+    static int provideNumber() {
+        return 10;
     }
 
-
-
-
-
+    @Provides
+    static String provideTitle() {
+        return SortFilterDialogModule.class.getSimpleName();
+    }
 }

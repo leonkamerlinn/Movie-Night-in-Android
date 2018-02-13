@@ -3,8 +3,9 @@ package com.example.leon.movienightinandroid.di.module;
 import android.app.Application;
 import android.content.Context;
 
-import com.example.leon.movienightinandroid.di.qulifier.ApplicationContext;
+import javax.inject.Named;
 
+import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 
@@ -13,29 +14,15 @@ import dagger.Provides;
  */
 
 @Module
-public class ApplicationModule {
-
-    private final Application mApplication;
-
-    public ApplicationModule(Application app) {
-        mApplication = app;
-    }
-
-    @Provides
-    @ApplicationContext
-    Context provideContext() {
-        return mApplication.getApplicationContext();
-    }
-
-    @Provides
-    Application provideApplication() {
-        return mApplication;
-    }
+public abstract class ApplicationModule {
+    @Binds
+    abstract Context provideContext(Application application);
 
 
     @Provides
-    String provideMessage() {
-        return SortFilterDialogModule.class.getSimpleName();
+    @Named("application")
+    static String provideName() {
+        return ApplicationModule.class.getSimpleName();
     }
 
 }

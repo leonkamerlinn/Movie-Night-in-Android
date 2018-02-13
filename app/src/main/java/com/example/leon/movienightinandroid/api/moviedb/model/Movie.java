@@ -1,4 +1,4 @@
-package com.example.leon.movienightinandroid.api.moviedb;
+package com.example.leon.movienightinandroid.api.moviedb.model;
 
 import android.support.annotation.NonNull;
 

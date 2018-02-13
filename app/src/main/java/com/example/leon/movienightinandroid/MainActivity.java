@@ -4,8 +4,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -17,47 +15,36 @@ import android.widget.Toast;
 import com.example.leon.movienightinandroid.api.moviedb.MovieRecyclerViewAdapter;
 import com.example.leon.movienightinandroid.api.moviedb.dialog.SortFilterDialog;
 import com.example.leon.movienightinandroid.databinding.ActivityMainBinding;
-import com.example.leon.movienightinandroid.di.component.DaggerMainActivityComponent;
-import com.example.leon.movienightinandroid.di.component.MainActivityComponent;
-import com.example.leon.movienightinandroid.di.module.ActivityModule;
 
-import javax.inject.Inject;
+import dagger.android.support.DaggerAppCompatActivity;
 
 
-public class MainActivity extends AppCompatActivity {
-
-    @Inject
-    MovieRecyclerViewAdapter mMovieRecyclerViewAdapter;
-    @Inject
-    ActivityMainBinding binding;
+public class MainActivity extends DaggerAppCompatActivity {
 
 
-
-    private MainActivityComponent activityComponent;
+    private MovieRecyclerViewAdapter mMovieRecyclerViewAdapter;
     private SearchView mSearchView;
 
-    public MainActivityComponent getActivityComponent() {
-        if (activityComponent == null) {
-            activityComponent = DaggerMainActivityComponent.builder()
-                    .activityModule(new ActivityModule(this))
-                    .applicationComponent(DemoApplication.get(this).getComponent())
-                    .build();
-        }
-        return activityComponent;
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActivityComponent().inject(this);
+        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        User user = new User(BuildConfig.ACCESS_TOKEN_V4_AUTH, BuildConfig.API_KEY);
+        binding.setUser(user);
         setSupportActionBar(binding.toolbar);
 
 
+
+        mMovieRecyclerViewAdapter = new MovieRecyclerViewAdapter();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
         binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setHasFixedSize(false);
+
+
         binding.recyclerView.setAdapter(mMovieRecyclerViewAdapter);
 
         binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

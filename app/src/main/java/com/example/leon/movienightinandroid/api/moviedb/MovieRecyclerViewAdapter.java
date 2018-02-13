@@ -6,18 +6,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.leon.movienightinandroid.BuildConfig;
 import com.example.leon.movienightinandroid.R;
+import com.example.leon.movienightinandroid.api.moviedb.model.Movie;
+import com.example.leon.movienightinandroid.api.moviedb.model.Page;
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Leon on 2/4/2018.
@@ -30,8 +37,31 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
     private int mCurrentPage = 1;
 
 
-    @Inject
-    public MovieRecyclerViewAdapter(UrlContracts.TheMovieService movieService){
+
+    public MovieRecyclerViewAdapter(){
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(chain -> {
+                    Request original = chain.request();
+                    HttpUrl httpUrl = original.url();
+
+                    HttpUrl newHttpUrl = httpUrl.newBuilder().addQueryParameter(UrlContracts.API_KEY_QUERY, BuildConfig.API_KEY).build();
+                    Request.Builder requestBuilder = original.newBuilder().url(newHttpUrl);
+                    Request request = requestBuilder.build();
+
+                    return chain.proceed(request);
+                }).build();
+
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(UrlContracts.BASE_URL)
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build();
+
+        UrlContracts.TheMovieService movieService = retrofit.create(UrlContracts.TheMovieService.class);
+
+
         mMovies = new HashSet<>();
         mMovieService = movieService;
 

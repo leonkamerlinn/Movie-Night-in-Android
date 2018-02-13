@@ -103,6 +103,6 @@ dependencies {
     //dagger2 di
     implementation "com.google.dagger:dagger:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-    provided 'javax.annotation:jsr250-api:1.0'
-    implementation 'javax.inject:javax.inject:1'
+    annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
+    implementation "com.google.dagger:dagger-android-support:$dagger_version"
 }

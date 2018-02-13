@@ -1,7 +1,6 @@
 package com.example.leon.movienightinandroid.api.moviedb.dialog;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,12 +11,7 @@ import android.widget.Toast;
 
 import com.example.leon.movienightinandroid.R;
 import com.example.leon.movienightinandroid.databinding.DialogSortFilterBinding;
-import com.example.leon.movienightinandroid.di.component.DaggerDialogFragmentComponent;
-import com.example.leon.movienightinandroid.di.component.DialogFragmentComponent;
-import com.example.leon.movienightinandroid.di.module.SortFilterDialogModule;
 import com.jakewharton.rxbinding2.widget.RxAdapterView;
-
-import javax.inject.Inject;
 
 /**
  * Created by Leon on 8.2.2018..
@@ -26,27 +20,18 @@ import javax.inject.Inject;
 
 public class SortFilterDialog extends DialogFragment {
     public static final String TAG = SortFilterDialog.class.getSimpleName();
-    private DialogFragmentComponent activityComponent;
 
-    @Inject
-    String message;
+
 
     public SortFilterDialog() {
-        getActivityComponent().inject(this);
+
     }
 
     public static SortFilterDialog newInstance() {
         return new SortFilterDialog();
     }
 
-    public DialogFragmentComponent getActivityComponent() {
-        if (activityComponent == null) {
-            activityComponent = DaggerDialogFragmentComponent.builder()
-                    .sortFilterDialogModule(new SortFilterDialogModule())
-                    .build();
-        }
-        return activityComponent;
-    }
+
 
     @NonNull
     @Override
@@ -57,7 +42,7 @@ public class SortFilterDialog extends DialogFragment {
         String[] sortItems = getResources().getStringArray(R.array.sort_items);
         RxAdapterView.itemSelections(binding.sortSpinner)
                 .subscribe(integer -> {
-                    Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "sd", Toast.LENGTH_LONG).show();
                 });
 
 
@@ -98,7 +83,7 @@ public class SortFilterDialog extends DialogFragment {
         if (activityComponent == null) {
             activityComponent = DaggerSortFilterComponent.builder()
                     .activityModule(new ActivityModule(getActivity()))
-                    .applicationComponent(DemoApplication.get(getContext()).getComponent())
+                    .applicationComponent(MainApplication.get(getContext()).getComponent())
                     .build();
         }
         return activityComponent;
