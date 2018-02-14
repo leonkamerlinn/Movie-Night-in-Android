@@ -19,6 +19,6 @@ public abstract class ActivityBuilder {
     abstract MainActivity bindMainActivity();
 
 
-    @ContributesAndroidInjector(modules = SortFilterDialogModule.class)
+    @ContributesAndroidInjector(modules = {SortFilterDialogModule.class})
     abstract SortFilterDialog provideDetailFragmentFactory();
 }

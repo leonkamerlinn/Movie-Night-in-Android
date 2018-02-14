@@ -31,6 +31,9 @@ public class MainActivity extends DaggerAppCompatActivity {
     @Inject
     ActivityMainBinding binding;
 
+    @Inject
+    Toast toast;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +42,8 @@ public class MainActivity extends DaggerAppCompatActivity {
         mMovieRecyclerViewAdapter = new MovieRecyclerViewAdapter();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
+
+        toast.show();
         binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setHasFixedSize(false);
 
