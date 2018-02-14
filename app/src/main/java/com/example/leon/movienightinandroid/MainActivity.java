@@ -16,6 +16,8 @@ import com.example.leon.movienightinandroid.api.moviedb.MovieRecyclerViewAdapter
 import com.example.leon.movienightinandroid.api.moviedb.dialog.SortFilterDialog;
 import com.example.leon.movienightinandroid.databinding.ActivityMainBinding;
 
+import javax.inject.Inject;
+
 import dagger.android.support.DaggerAppCompatActivity;
 
 
@@ -26,19 +28,15 @@ public class MainActivity extends DaggerAppCompatActivity {
     private SearchView mSearchView;
 
 
+    @Inject
+    ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        User user = new User(BuildConfig.ACCESS_TOKEN_V4_AUTH, BuildConfig.API_KEY);
-        binding.setUser(user);
+
         setSupportActionBar(binding.toolbar);
-
-
-
         mMovieRecyclerViewAdapter = new MovieRecyclerViewAdapter();
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
         binding.recyclerView.setLayoutManager(layoutManager);

@@ -2,6 +2,7 @@ package com.example.leon.movienightinandroid.di.module;
 
 import android.app.Application;
 import android.content.Context;
+import android.widget.Toast;
 
 import javax.inject.Named;
 
@@ -24,5 +25,7 @@ public abstract class ApplicationModule {
     static String provideName() {
         return ApplicationModule.class.getSimpleName();
     }
+
+
 
 }

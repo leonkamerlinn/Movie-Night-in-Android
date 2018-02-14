@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.widget.Toast;
 
 import com.example.leon.movienightinandroid.BuildConfig;
+import com.example.leon.movienightinandroid.MainActivity;
 import com.example.leon.movienightinandroid.R;
 import com.example.leon.movienightinandroid.User;
 import com.example.leon.movienightinandroid.databinding.ActivityMainBinding;
@@ -21,7 +23,8 @@ import dagger.Provides;
 @Module(includes = {ApplicationModule.class})
 public abstract class MainActivityModule {
 
-
+    @Binds
+    abstract Activity provideContext(MainActivity mainActivity);
 
     @Provides
     static String provideMainPresenter() {
@@ -35,5 +38,10 @@ public abstract class MainActivityModule {
         binding.setUser(user);
 
         return binding;
+    }
+
+    @Provides
+    static Toast provideToast(Activity context, String msg) {
+        return Toast.makeText(context, msg, Toast.LENGTH_LONG);
     }
 }
