@@ -12,13 +12,17 @@
     <string name="switch_movie">Movie</string>
     <string name="tv">tv</string>
     <string name="movie">movie</string>
-    
-    
+    <string name="release_date">Release date</string>
+    <string name="both">Both</string>
+
+
     <string-array name="sort_items">
         <item>popularity</item>
-        <item>rating</item>
-        <item>votes</item>
         <item>release date</item>
+        <item>revenue</item>
+        <item>average votes</item>
+        <item>votes</item>
+
     </string-array>
 
 

@@ -40,6 +40,14 @@ public class SortFilterDialog extends DaggerAppCompatDialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
 
+        binding.checkbox1.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            System.out.println("checkbox1 is "+isChecked);
+        });
+
+        binding.checkbox2.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            System.out.println("checkbox2 is "+isChecked);
+        });
+
 
         String[] sortItems = getResources().getStringArray(R.array.sort_items);
         RxAdapterView.itemSelections(binding.sortSpinner)
