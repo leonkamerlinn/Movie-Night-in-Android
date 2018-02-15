@@ -3,17 +3,24 @@ package com.example.leon.movienightinandroid;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.leon.movienightinandroid.api.moviedb.MovieRecyclerViewAdapter;
+import com.example.leon.movienightinandroid.api.moviedb.dialog.DatePickerFragment;
 import com.example.leon.movienightinandroid.api.moviedb.dialog.SortFilterDialog;
+import com.example.leon.movienightinandroid.api.moviedb.dialog.TimePickerFragment;
 import com.example.leon.movienightinandroid.databinding.ActivityMainBinding;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+
+import java.util.Calendar;
 
 import javax.inject.Inject;
 
@@ -40,7 +47,7 @@ public class MainActivity extends DaggerAppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setHasFixedSize(false);
-
+        showDatePickerDialog();
 
         binding.recyclerView.setAdapter(mMovieRecyclerViewAdapter);
 
@@ -103,6 +110,26 @@ public class MainActivity extends DaggerAppCompatActivity {
         });
 
         return true;
+    }
+
+    public void showTimePickerDialog() {
+        DialogFragment newFragment = new TimePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "timePicker");
+    }
+
+    public void showDatePickerDialog() {
+        /*DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "datePicker");*/
+
+        Calendar now = Calendar.getInstance();
+        DatePickerDialog dpd = DatePickerDialog.newInstance(
+                (view, year, monthOfYear, dayOfMonth) -> {
+
+                },
+                now.get(Calendar.YEAR),
+                now.get(Calendar.MONTH),
+                now.get(Calendar.DAY_OF_MONTH));
+        dpd.show(getFragmentManager(), "Datepickerdialog");
     }
 
     @Override

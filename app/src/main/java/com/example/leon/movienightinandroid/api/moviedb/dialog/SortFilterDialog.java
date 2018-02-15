@@ -1,11 +1,9 @@
 package com.example.leon.movienightinandroid.api.moviedb.dialog;
 
 import android.app.Dialog;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
-import android.view.LayoutInflater;
 
 import com.example.leon.movienightinandroid.R;
 import com.example.leon.movienightinandroid.databinding.DialogSortFilterBinding;
