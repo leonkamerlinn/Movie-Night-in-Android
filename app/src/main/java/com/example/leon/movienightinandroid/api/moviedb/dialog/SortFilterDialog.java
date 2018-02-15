@@ -11,6 +11,8 @@ import com.example.leon.movienightinandroid.R;
 import com.example.leon.movienightinandroid.databinding.DialogSortFilterBinding;
 import com.jakewharton.rxbinding2.widget.RxAdapterView;
 
+import javax.inject.Inject;
+
 import dagger.android.support.DaggerAppCompatDialogFragment;
 
 /**
@@ -21,7 +23,8 @@ import dagger.android.support.DaggerAppCompatDialogFragment;
 public class SortFilterDialog extends DaggerAppCompatDialogFragment {
     public static final String TAG = SortFilterDialog.class.getSimpleName();
 
-
+    @Inject
+    DialogSortFilterBinding binding;
 
     public SortFilterDialog() {
     }
@@ -35,9 +38,6 @@ public class SortFilterDialog extends DaggerAppCompatDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-        DialogSortFilterBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout. dialog_sort_filter, null, false);
-
 
 
 

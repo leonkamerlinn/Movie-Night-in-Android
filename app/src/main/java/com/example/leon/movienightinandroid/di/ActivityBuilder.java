@@ -16,9 +16,9 @@ import dagger.android.ContributesAndroidInjector;
 @Module
 public abstract class ActivityBuilder {
     @ContributesAndroidInjector(modules = MainActivityModule.class)
-    abstract MainActivity bindMainActivity();
+    abstract MainActivity provideMainActivity();
 
 
     @ContributesAndroidInjector(modules = {SortFilterDialogModule.class})
-    abstract SortFilterDialog provideDetailFragmentFactory();
+    abstract SortFilterDialog provideSortFilterDialog();
 }

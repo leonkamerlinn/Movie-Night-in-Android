@@ -2,7 +2,6 @@ package com.example.leon.movienightinandroid;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,27 +22,22 @@ import dagger.android.support.DaggerAppCompatActivity;
 
 public class MainActivity extends DaggerAppCompatActivity {
 
-
-    private MovieRecyclerViewAdapter mMovieRecyclerViewAdapter;
     private SearchView mSearchView;
-
 
     @Inject
     ActivityMainBinding binding;
 
     @Inject
-    Toast toast;
+    MovieRecyclerViewAdapter mMovieRecyclerViewAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setSupportActionBar(binding.toolbar);
-        mMovieRecyclerViewAdapter = new MovieRecyclerViewAdapter();
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-
-
-        toast.show();
         binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setHasFixedSize(false);
 
@@ -73,7 +67,6 @@ public class MainActivity extends DaggerAppCompatActivity {
         });
 
     }
-
 
 
     @Override

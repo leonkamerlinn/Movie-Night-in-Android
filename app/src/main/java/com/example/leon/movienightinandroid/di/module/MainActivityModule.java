@@ -1,6 +1,7 @@
 package com.example.leon.movienightinandroid.di.module;
 
 import android.app.Activity;
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.view.LayoutInflater;
 import android.widget.Toast;
@@ -12,6 +13,9 @@ import com.example.leon.movienightinandroid.User;
 import com.example.leon.movienightinandroid.api.moviedb.dialog.SortFilterDialog;
 import com.example.leon.movienightinandroid.databinding.ActivityMainBinding;
 import com.example.leon.movienightinandroid.databinding.DialogSortFilterBinding;
+import com.example.leon.movienightinandroid.di.qualifier.ActivityContext;
+
+import javax.inject.Singleton;
 
 import dagger.Binds;
 import dagger.Module;
@@ -27,9 +31,11 @@ public abstract class MainActivityModule {
     @Binds
     abstract Activity provideActivity(MainActivity mainActivity);
 
-/*    @Binds
-    abstract Activity provideActivity(SortFilterDialog sortFilterDialog);*/
-
+    @Provides
+    @ActivityContext
+    static Context provideContext(MainActivity mainActivity) {
+        return mainActivity;
+    }
 
     @Provides
     static ActivityMainBinding provideViewBinding(Activity activity) {
@@ -39,12 +45,6 @@ public abstract class MainActivityModule {
 
         return binding;
     }
-
-    @Provides
-    static Toast provideToast(Activity activity) {
-        return Toast.makeText(activity, String.valueOf(10), Toast.LENGTH_LONG);
-    }
-
 
 
 }
