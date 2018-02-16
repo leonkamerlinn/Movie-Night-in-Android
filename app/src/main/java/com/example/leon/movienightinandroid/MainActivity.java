@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.leon.movienightinandroid.api.moviedb.MovieRecyclerViewAdapter;
+import com.example.leon.movienightinandroid.api.moviedb.UrlContracts;
 import com.example.leon.movienightinandroid.api.moviedb.dialog.TimePickerFragment;
 import com.example.leon.movienightinandroid.databinding.ActivityMainBinding;
 import com.example.leon.movienightinandroid.ui.SortFilterActivity;
@@ -25,6 +26,9 @@ import java.util.Calendar;
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerAppCompatActivity;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 
 public class MainActivity extends DaggerAppCompatActivity {
@@ -38,6 +42,9 @@ public class MainActivity extends DaggerAppCompatActivity {
     @Inject
     MovieRecyclerViewAdapter mMovieRecyclerViewAdapter;
 
+
+    @Inject
+    UrlContracts.TheMovieService movieService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +81,13 @@ public class MainActivity extends DaggerAppCompatActivity {
 
             }
         });
+
+
+
+        movieService.discoverMovies(1)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(mMovieRecyclerViewAdapter);
     }
 
 

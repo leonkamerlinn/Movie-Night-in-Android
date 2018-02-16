@@ -25,7 +25,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by Leon on 2/4/2018.
  */
 
-public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecyclerViewAdapter.MovieViewHolder> {
+public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecyclerViewAdapter.MovieViewHolder> implements Observer<Page> {
     private final HashSet<Movie> mMovies;
     private final UrlContracts.TheMovieService mMovieService;
     private boolean isLoanding = true;
@@ -33,44 +33,12 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
 
     @Inject
     public MovieRecyclerViewAdapter(UrlContracts.TheMovieService movieService){
-
         mMovies = new HashSet<>();
         mMovieService = movieService;
-
-        loadPage(mCurrentPage);
+        //loadPage(mCurrentPage);
     }
 
-    public void loadPage(int page) {
-        isLoanding = true;
 
-        mMovieService.discoverMovies(page)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Page>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(Page page) {
-                        addPage(page);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        isLoanding = false;
-                    }
-                });
-    }
-
-    public boolean isLoanding() {
-        return isLoanding;
-    }
 
     @Override
     public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -91,9 +59,49 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
         return mMovies.size();
     }
 
+
+
+    @Override
+    public void onSubscribe(Disposable d) {
+
+    }
+
+    @Override
+    public void onNext(Page page) {
+        addPage(page);
+        System.out.println(page);
+    }
+
+    @Override
+    public void onError(Throwable e) {
+
+    }
+
+    @Override
+    public void onComplete() {
+        isLoanding = false;
+    }
+
+
+
+
     public void loadNextPage() {
+        if (mCurrentPage == 1000)return;
         mCurrentPage++;
         loadPage(mCurrentPage);
+    }
+
+    public void loadPage(int page) {
+        isLoanding = true;
+
+        mMovieService.discoverMovies(page)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this);
+    }
+
+    public boolean isLoanding() {
+        return isLoanding;
     }
 
 

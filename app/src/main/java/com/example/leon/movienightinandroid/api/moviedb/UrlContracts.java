@@ -83,7 +83,7 @@ public class UrlContracts {
         Observable<List<Genre>> genres();
 
         @GET(UrlContracts.SEARCH_MOVIE_PATH)
-        Observable<Page> searchMove(@Query(UrlContracts.SEARCH_QUERY) String query);
+        Observable<Page> searchMovie(@Query(UrlContracts.SEARCH_QUERY) String query);
 
         @GET(UrlContracts.SEARCH_TV_PATH)
         Observable<Page> searchTv(@Query(UrlContracts.SEARCH_QUERY) String query);
