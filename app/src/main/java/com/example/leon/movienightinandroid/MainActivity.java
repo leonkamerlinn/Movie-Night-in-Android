@@ -2,6 +2,7 @@ package com.example.leon.movienightinandroid;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,14 +11,12 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.leon.movienightinandroid.api.moviedb.MovieRecyclerViewAdapter;
-import com.example.leon.movienightinandroid.api.moviedb.dialog.DatePickerFragment;
-import com.example.leon.movienightinandroid.api.moviedb.dialog.SortFilterDialog;
 import com.example.leon.movienightinandroid.api.moviedb.dialog.TimePickerFragment;
 import com.example.leon.movienightinandroid.databinding.ActivityMainBinding;
+import com.example.leon.movienightinandroid.ui.SortFilterActivity;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.Calendar;
@@ -29,6 +28,7 @@ import dagger.android.support.DaggerAppCompatActivity;
 
 public class MainActivity extends DaggerAppCompatActivity {
 
+    public static final int REQUEST_CODE = 10;
     private SearchView mSearchView;
 
     @Inject
@@ -47,7 +47,7 @@ public class MainActivity extends DaggerAppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setHasFixedSize(false);
-        showDatePickerDialog();
+        //showDatePickerDialog();
 
         binding.recyclerView.setAdapter(mMovieRecyclerViewAdapter);
 
@@ -72,14 +72,13 @@ public class MainActivity extends DaggerAppCompatActivity {
 
             }
         });
-
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.option_menu, menu);
+        menuInflater.inflate(R.menu.home_menu, menu);
 
 
         // Associate searchable configuration with the SearchView
@@ -147,12 +146,27 @@ public class MainActivity extends DaggerAppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item_sort:
-                SortFilterDialog.newInstance().show(getSupportFragmentManager(), SortFilterDialog.TAG);
+                //SortFilterDialog.newInstance().show(getSupportFragmentManager(), SortFilterDialog.TAG);
+                Intent intent = new Intent(this, SortFilterActivity.class);
+                startActivityForResult(intent, REQUEST_CODE);
                 break;
 
             default:
                 break;
         }
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE) {
+            if(resultCode == RESULT_OK){
+                String result = data.getStringExtra("result");
+                Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                //Write your code if there's no
+                Toast.makeText(this, "cancel", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

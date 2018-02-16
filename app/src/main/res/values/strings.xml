@@ -1,8 +1,8 @@
 <resources>
-	<string name="app_name">Movie Night in Android</string>
+    <string name="app_name">Movie Night in Android</string>
     <string name="sort_by">Sort by:</string>
     <string name="sort">Sort</string>
-	<string name="action_search">search</string>
+    <string name="action_search">search</string>
     <string name="apply">Apply</string>
     <string name="cancel">Cancel</string>
     <string name="filter_by">Filter by:</string>
@@ -14,6 +14,7 @@
     <string name="movie">movie</string>
     <string name="release_date">Release date</string>
     <string name="both">Both</string>
+    <string name="filter_title">Filter</string>
 
 
     <string-array name="sort_items">
