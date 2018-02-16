@@ -1,5 +1,6 @@
 package com.example.leon.movienightinandroid;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -43,6 +44,7 @@ public class MainActivity extends DaggerAppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setSupportActionBar(binding.toolbar);
+
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         binding.recyclerView.setLayoutManager(layoutManager);
@@ -160,13 +162,15 @@ public class MainActivity extends DaggerAppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE) {
-            if(resultCode == RESULT_OK){
+            if(resultCode == Activity.RESULT_OK){
                 String result = data.getStringExtra("result");
                 Toast.makeText(this, result, Toast.LENGTH_LONG).show();
-            } else if (resultCode == RESULT_CANCELED) {
+            } else if (resultCode == Activity.RESULT_CANCELED) {
                 //Write your code if there's no
                 Toast.makeText(this, "cancel", Toast.LENGTH_LONG).show();
             }
         }
     }
+
+
 }

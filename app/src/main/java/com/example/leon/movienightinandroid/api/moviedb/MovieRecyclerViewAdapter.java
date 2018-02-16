@@ -43,7 +43,7 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
     public void loadPage(int page) {
         isLoanding = true;
 
-        mMovieService.listMovies(page)
+        mMovieService.discoverMovies(page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Page>() {

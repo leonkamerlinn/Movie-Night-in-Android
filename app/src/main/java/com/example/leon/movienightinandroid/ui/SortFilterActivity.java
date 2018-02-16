@@ -1,37 +1,39 @@
 package com.example.leon.movienightinandroid.ui;
 
-import android.app.Activity;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import com.example.leon.movienightinandroid.MainActivity;
 import com.example.leon.movienightinandroid.R;
-import com.example.leon.movienightinandroid.api.moviedb.dialog.TimePickerFragment;
-import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.example.leon.movienightinandroid.databinding.ActivitySortFilterBinding;
 
-import java.util.Calendar;
+import javax.inject.Inject;
 
-public class SortFilterActivity extends AppCompatActivity {
+import dagger.android.support.DaggerAppCompatActivity;
+
+
+public class SortFilterActivity extends DaggerAppCompatActivity {
+    @Inject
+    ActivitySortFilterBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sort_filter);
 
-        setSupportActionBar(findViewById(R.id.toolbar));
+
+        setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(getResources().getString(R.string.filter_title));
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_black_24dp);
+
+
+
     }
 
 
