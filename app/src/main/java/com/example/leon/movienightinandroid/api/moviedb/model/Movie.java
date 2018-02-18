@@ -21,6 +21,8 @@ public class Movie implements Comparable<Movie> {
     public boolean adult;
     public String overview;
     public String release_date;
+    public String original_name;
+    public String name;
 
     @Override
     public int compareTo(@NonNull Movie other) {

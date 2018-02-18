@@ -15,8 +15,12 @@
     <string name="release_date">Release date</string>
     <string name="both">Both</string>
     <string name="filter_title">Filter</string>
-
-
+	<string name="all">all</string>
+    <string name="filter">Filter</string>
+    <string name="action">action</string>
+    
+    
+    
     <string-array name="sort_items">
         <item>popularity</item>
         <item>release date</item>

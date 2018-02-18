@@ -17,34 +17,40 @@ import android.widget.Toast;
 import com.example.leon.movienightinandroid.api.moviedb.MovieRecyclerViewAdapter;
 import com.example.leon.movienightinandroid.api.moviedb.UrlContracts;
 import com.example.leon.movienightinandroid.api.moviedb.dialog.TimePickerFragment;
+import com.example.leon.movienightinandroid.api.moviedb.model.Page;
 import com.example.leon.movienightinandroid.databinding.ActivityMainBinding;
 import com.example.leon.movienightinandroid.ui.SortFilterActivity;
-import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
+import com.jakewharton.rxbinding2.support.v7.widget.SearchViewQueryTextEvent;
+import com.jakewharton.rxbinding2.widget.RxCompoundButton;
 
 import java.util.Calendar;
 
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerAppCompatActivity;
-import io.reactivex.Scheduler;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.example.leon.movienightinandroid.api.moviedb.MovieRecyclerViewAdapter.Mode.DISCOVER_MOVIES;
+
 
 public class MainActivity extends DaggerAppCompatActivity {
-
     public static final int REQUEST_CODE = 10;
     private SearchView mSearchView;
+    private Observable<Boolean> mRadioGroupObservable;
+    private LinearLayoutManager mLayoutManager;
+    private String mQuery;
 
     @Inject
     ActivityMainBinding binding;
-
     @Inject
     MovieRecyclerViewAdapter mMovieRecyclerViewAdapter;
-
-
     @Inject
     UrlContracts.TheMovieService movieService;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,42 +58,40 @@ public class MainActivity extends DaggerAppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
 
+        Observable<Boolean> radioAllObservable = RxCompoundButton.checkedChanges(binding.radioAll)
+                .filter(aBoolean -> aBoolean);
+        Observable<Boolean> radioMovieObservable = RxCompoundButton.checkedChanges(binding.radioMovie)
+                .filter(aBoolean -> aBoolean);
+        Observable<Boolean> radioTvObservable = RxCompoundButton.checkedChanges(binding.radioTv)
+                .filter(aBoolean -> aBoolean);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        binding.recyclerView.setLayoutManager(layoutManager);
+        mRadioGroupObservable = Observable.merge(radioAllObservable, radioMovieObservable, radioTvObservable);
+
+
+        mLayoutManager = new LinearLayoutManager(this);
+        binding.recyclerView.setLayoutManager(mLayoutManager);
         binding.recyclerView.setHasFixedSize(false);
-        //showDatePickerDialog();
-
         binding.recyclerView.setAdapter(mMovieRecyclerViewAdapter);
-
-        binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                int totalItemCount = layoutManager.getItemCount();
-                //adapter position of the first visible view.
-                int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
-                int visibleThreshold = 5;
-
-                if (!mMovieRecyclerViewAdapter.isLoanding() && totalItemCount <= lastVisibleItem + visibleThreshold) {
-                    mMovieRecyclerViewAdapter.loadNextPage();
-                }
-
-            }
-        });
+        binding.recyclerView.addOnScrollListener(new RecyclerViewScroller());
 
 
-
-        movieService.discoverMovies(1)
+        Observable<Page> one = movieService.discoverMovies(1)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mMovieRecyclerViewAdapter);
+                .observeOn(AndroidSchedulers.mainThread());
+
+        Observable<Page> two = movieService.discoverMovies(2)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+        Observable<Page> three = movieService.discoverMovies(3)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+
+        Observable.concat(one, two, three).subscribe(mMovieRecyclerViewAdapter);
+
+
+        mMovieRecyclerViewAdapter.setMode(DISCOVER_MOVIES);
     }
 
 
@@ -103,26 +107,54 @@ public class MainActivity extends DaggerAppCompatActivity {
         mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         mSearchView.setMaxWidth(Integer.MAX_VALUE);
 
-        // listening to search query text change
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                // filter recycler view when query submitted
-                Toast.makeText(MainActivity.this, query, Toast.LENGTH_LONG).show();
-                getSupportActionBar().setTitle(query);
+        Observable<String> stringObservable = RxSearchView.queryTextChangeEvents(mSearchView)
+                .filter(SearchViewQueryTextEvent::isSubmitted)
+                .map(searchViewQueryTextEvent -> searchViewQueryTextEvent.queryText().toString());
+
+
+
+        Observable.combineLatest(stringObservable, mRadioGroupObservable, (query, aBoolean) -> {
+            mQuery = query;
+            Toast.makeText(MainActivity.this, query,Toast.LENGTH_SHORT).show();
+            mMovieRecyclerViewAdapter.clear();
+            getSupportActionBar().setTitle(query);
+
+            if (!mSearchView.isIconified()) {
                 mSearchView.setQuery(null, false);
                 mSearchView.setIconified(true);
 
-                return false;
             }
 
-            @Override
-            public boolean onQueryTextChange(String query) {
-                // filter recycler view when text is changed
+            if (binding.radioAll.isChecked()) {
 
-                return false;
+                mMovieRecyclerViewAdapter.setMode(MovieRecyclerViewAdapter.Mode.SEARCH_ALL);
+                movieService.searchMulti(query)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(mMovieRecyclerViewAdapter);
+
+            } else if (binding.radioTv.isChecked()) {
+
+                mMovieRecyclerViewAdapter.setMode(MovieRecyclerViewAdapter.Mode.SEARCH_TV);
+                movieService.searchTv(query)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(mMovieRecyclerViewAdapter);
+
+            } else if (binding.radioMovie.isChecked()) {
+
+                mMovieRecyclerViewAdapter.setMode(MovieRecyclerViewAdapter.Mode.SEARCH_MOVIES);
+                movieService.searchMovie(query)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(mMovieRecyclerViewAdapter);
+
             }
-        });
+
+
+
+            return query;
+        }).subscribe();
 
         return true;
     }
@@ -137,14 +169,14 @@ public class MainActivity extends DaggerAppCompatActivity {
         newFragment.show(getSupportFragmentManager(), "datePicker");*/
 
         Calendar now = Calendar.getInstance();
-        DatePickerDialog dpd = DatePickerDialog.newInstance(
+       /* DatePickerDialog dpd = DatePickerDialog.newInstance(
                 (view, year, monthOfYear, dayOfMonth) -> {
 
                 },
                 now.get(Calendar.YEAR),
                 now.get(Calendar.MONTH),
                 now.get(Calendar.DAY_OF_MONTH));
-        dpd.show(getFragmentManager(), "Datepickerdialog");
+        dpd.show(getFragmentManager(), "Datepickerdialog");*/
     }
 
     @Override
@@ -187,4 +219,68 @@ public class MainActivity extends DaggerAppCompatActivity {
     }
 
 
+
+    private class RecyclerViewScroller extends RecyclerView.OnScrollListener {
+        public RecyclerViewScroller() {
+            super();
+        }
+
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+
+
+
+            int totalItemCount = mLayoutManager.getItemCount();
+            //adapter position of the first visible view.
+            int lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
+            int visibleThreshold = 5;
+
+            if (!mMovieRecyclerViewAdapter.isLoanding() && totalItemCount <= lastVisibleItem + visibleThreshold) {
+                //mMovieRecyclerViewAdapter.loadNextPage();
+
+                switch (mMovieRecyclerViewAdapter.getMode()) {
+                    case DISCOVER_MOVIES:
+                        movieService.discoverMovies(mMovieRecyclerViewAdapter.getNextPage())
+                            .skipWhile(page -> mMovieRecyclerViewAdapter.isLastPage())
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(mMovieRecyclerViewAdapter);
+                        break;
+
+                    case DISCOVER_TV:
+                        break;
+
+                    case SEARCH_MOVIES:
+                        movieService.searchMovie(mQuery)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(mMovieRecyclerViewAdapter);
+                        break;
+
+                    case SEARCH_TV:
+                        movieService.searchTv(mQuery)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(mMovieRecyclerViewAdapter);
+                        break;
+
+                    case SEARCH_ALL:
+                        movieService.searchMulti(mQuery)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(mMovieRecyclerViewAdapter);
+                        break;
+                }
+
+
+            }
+
+        }
+    }
 }

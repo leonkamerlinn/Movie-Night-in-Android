@@ -87,6 +87,7 @@ dependencies {
     //retrofit
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0"
 
@@ -100,10 +101,9 @@ dependencies {
     implementation "com.yahoo.mobile.client.android.util.rangeseekbar:rangeseekbar-library:0.1.0"
     implementation 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'*/
 
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation('com.wdullaer:materialdatetimepicker:3.5.1') {
+    /*implementation('com.wdullaer:materialdatetimepicker:3.5.1') {
         exclude group: 'com.android.support'
-    }
+    }*/
 
     //dagger2 di
     implementation "com.google.dagger:dagger:$dagger_version"

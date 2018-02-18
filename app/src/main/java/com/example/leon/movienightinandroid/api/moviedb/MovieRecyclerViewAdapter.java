@@ -1,5 +1,7 @@
 package com.example.leon.movienightinandroid.api.moviedb;
 
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +11,10 @@ import android.widget.TextView;
 import com.example.leon.movienightinandroid.R;
 import com.example.leon.movienightinandroid.api.moviedb.model.Movie;
 import com.example.leon.movienightinandroid.api.moviedb.model.Page;
+import com.example.leon.movienightinandroid.databinding.ItemMovieBinding;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -26,32 +30,51 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecyclerViewAdapter.MovieViewHolder> implements Observer<Page> {
-    private final HashSet<Movie> mMovies;
-    private final UrlContracts.TheMovieService mMovieService;
-    private boolean isLoanding = true;
-    private int mCurrentPage = 1;
+    private Mode mMode;
+    private Page mLastPage;
 
-    @Inject
-    public MovieRecyclerViewAdapter(UrlContracts.TheMovieService movieService){
-        mMovies = new HashSet<>();
-        mMovieService = movieService;
-        //loadPage(mCurrentPage);
+    public enum Mode {
+        SEARCH_ALL,
+        SEARCH_MOVIES,
+        SEARCH_TV,
+        DISCOVER_MOVIES,
+        DISCOVER_TV
     }
 
 
+    private final List<Movie> mMovies;
+    private final UrlContracts.TheMovieService mMovieService;
+    private boolean isLoanding = true;
+
+    @Inject
+    public MovieRecyclerViewAdapter(UrlContracts.TheMovieService movieService){
+        mMovies = new ArrayList<>();
+        mMovieService = movieService;
+    }
+
+    public void clear() {
+        mMovies.clear();
+        notifyDataSetChanged();
+    }
 
     @Override
     public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movie, parent, false);
 
 
-        return new MovieViewHolder(itemView);
+        ItemMovieBinding itemMovieBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.item_movie, parent, false);
+
+        return new MovieViewHolder(itemMovieBinding);
     }
 
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
+        ItemMovieBinding binding = holder.binding;
+
         List<Movie> movies = new ArrayList<>(mMovies);
-        holder.textView.setText(movies.get(position).original_title);
+        String title = movies.get(position).original_title;
+        String name = movies.get(position).original_name;
+        binding.sortTextView.setText((title == null) ? name : title);
     }
 
     @Override
@@ -63,18 +86,22 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
 
     @Override
     public void onSubscribe(Disposable d) {
-
+        isLoanding = true;
     }
 
     @Override
     public void onNext(Page page) {
+        System.out.println(page.results.size());
+        for (Movie movie: page.results) {
+            System.out.println(movie.original_title);
+            System.out.println(movie.id);
+        }
         addPage(page);
-        System.out.println(page);
     }
 
     @Override
     public void onError(Throwable e) {
-
+        System.out.println(e.getMessage());
     }
 
     @Override
@@ -84,21 +111,18 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
 
 
 
-
-    public void loadNextPage() {
-        if (mCurrentPage == 1000)return;
-        mCurrentPage++;
-        loadPage(mCurrentPage);
+    public boolean isLastPage() {
+        return (mLastPage.total_pages == mLastPage.page);
     }
 
-    public void loadPage(int page) {
-        isLoanding = true;
-
-        mMovieService.discoverMovies(page)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this);
+    public int getNextPage() {
+        return mLastPage.page + 1;
     }
+
+    public Page getLastPage() {
+        return mLastPage;
+    }
+
 
     public boolean isLoanding() {
         return isLoanding;
@@ -107,26 +131,28 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
 
     public static class MovieViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView textView;
+        private final ItemMovieBinding binding;
 
-        public MovieViewHolder(View itemView) {
-            super(itemView);
-            textView = itemView.findViewById(R.id.sortTextView);
+        public MovieViewHolder(ItemMovieBinding itemMovieBinding) {
+            super(itemMovieBinding.getRoot());
+            binding = itemMovieBinding;
         }
     }
 
-    public void addPage(Page page) {
-
-        for (Movie movie: page.results) {
-            if (mMovies.add(movie)) {
-                notifyItemInserted(mMovies.size() - 1);
-            }
-        }
+    private void addPage(Page page) {
+        mLastPage = page;
+        mMovies.addAll(page.results);
+        notifyDataSetChanged();
+       // notifyItemRangeInserted(mMovies.size() - 1, page.results.size());
 
     }
 
-    public interface Progress {
-        void onDone();
-        void onLoanding();
+    public void setMode(Mode mode) {
+        mMode = mode;
     }
+
+    public Mode getMode() {
+        return mMode;
+    }
+
 }

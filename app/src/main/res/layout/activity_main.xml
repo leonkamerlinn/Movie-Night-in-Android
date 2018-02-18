@@ -31,7 +31,43 @@
 				android:layout_height="?attr/actionBarSize"
 				app:title="@string/app_name"
 				android:background="@android:color/white"
-				app:popupTheme="@style/AppTheme.PopupOverlay"/>
+				app:popupTheme="@style/AppTheme.PopupOverlay" />
+			
+			<RadioGroup
+				android:background="@android:color/white"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:orientation="horizontal"
+				android:id="@+id/radio_group">
+				
+				
+				<RadioButton
+					android:id="@+id/radio_all"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginEnd="20dp"
+					android:layout_marginStart="20dp"
+					android:text="@string/all"
+					android:checked="true" />
+				
+				<RadioButton
+					android:id="@+id/radio_movie"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginEnd="20dp"
+					android:layout_marginStart="20dp"
+					android:text="@string/movie" />
+				
+				<RadioButton
+					android:id="@+id/radio_tv"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginEnd="20dp"
+					android:layout_marginStart="20dp"
+					android:text="@string/tv" />
+				
+			</RadioGroup>
 		
 		</android.support.design.widget.AppBarLayout>
 		
