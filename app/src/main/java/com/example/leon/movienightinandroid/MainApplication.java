@@ -1,5 +1,7 @@
 package com.example.leon.movienightinandroid;
 
+import android.support.multidex.MultiDex;
+
 import com.example.leon.movienightinandroid.di.component.ApplicationComponent;
 import com.example.leon.movienightinandroid.di.component.DaggerApplicationComponent;
 
@@ -12,6 +14,15 @@ import dagger.android.support.DaggerApplication;
  */
 
 public class MainApplication extends DaggerApplication {
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        MultiDex.install(this);
+    }
+
+
+
     @Override
     protected AndroidInjector<? extends DaggerApplication> applicationInjector() {
         ApplicationComponent applicationComponent = DaggerApplicationComponent.builder()

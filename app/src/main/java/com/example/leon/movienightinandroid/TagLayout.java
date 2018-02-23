@@ -11,13 +11,16 @@ import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 /**
  * Created by Leon on 19.2.2018..
  */
 
-public class TagLayout extends ViewGroup {
+public class TagLayout extends LinearLayout {
     int deviceWidth;
+
 
     public TagLayout(Context context) {
         this(context, null, 0);
@@ -41,9 +44,7 @@ public class TagLayout extends ViewGroup {
 
     @Override
     protected void onLayout(boolean b, int i, int i1, int i2, int i3) {
-
-        int childWidth, childHeight, curLeft, curTop, curBottom, maxHeight;
-
+        boolean newRow;
         final int rootLeft = getPaddingLeft();
         final int rootRight = getMeasuredWidth() - getPaddingRight();
 
@@ -54,38 +55,62 @@ public class TagLayout extends ViewGroup {
         final int rootBottom = getMeasuredHeight() - getPaddingBottom();
 
 
-        maxHeight = rootHeight;
-        curLeft = rootLeft;
-        curTop = rootTop;
-        curBottom = rootBottom;
+        int currentLeft = rootLeft;
+        int currentTop = rootTop;
 
+        int childWidth, childHeight;
+        int previusMarginTop = 0;
+        int previusMarginBottom = 0;
+        int countRow = 0;
 
-        for (int l = 0; l < getChildCount(); l++) {
-            View child = getChildAt(l);
-
+        for (int x = 0; x < getChildCount(); x++) {
+            View child = getChildAt(x);
             if (child.getVisibility() == GONE) return;
 
             child.measure(MeasureSpec.makeMeasureSpec(rootWidth, MeasureSpec.AT_MOST), MeasureSpec.makeMeasureSpec(rootHeight, MeasureSpec.AT_MOST));
             childWidth = child.getMeasuredWidth();
             childHeight = child.getMeasuredHeight();
+            LinearLayout.LayoutParams lp = (LayoutParams) child.getLayoutParams();
+            currentLeft += lp.leftMargin;
 
-            if (curLeft + childWidth >= rootRight) {
 
 
+            currentTop -= previusMarginTop;
+            currentTop += lp.topMargin;
+            previusMarginTop = lp.topMargin;
+
+
+
+
+            if (currentLeft + childWidth > rootRight) {
                 // new row
-                curLeft = rootLeft;
-                curTop += childHeight;
+                newRow = true;
+                countRow++;
+                currentLeft = rootLeft;
+                currentTop += childHeight;
+            } else {
+                newRow = false;
+            }
 
+            if (countRow > 0) {
+
+                if (newRow) {
+                    currentLeft += lp.leftMargin;
+                } else {
+                    currentTop -= previusMarginBottom;
+                }
+
+                currentTop += lp.bottomMargin;
+                previusMarginBottom = lp.bottomMargin;
             }
 
 
             //do the layout
-            child.layout(curLeft, curTop, curLeft + childWidth, curTop + childHeight);
+            child.layout(currentLeft, currentTop, currentLeft + childWidth, currentTop + childHeight);
             //store the max height
 
-            curLeft += childWidth;
-
-
+            currentLeft += childWidth;
+            currentLeft += lp.rightMargin;
         }
     }
 
@@ -95,21 +120,22 @@ public class TagLayout extends ViewGroup {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
-        int count = getChildCount();
+        boolean newRow;
         // Measurement will ultimately be computing these values.
         int maxHeight = 0;
+        int maxWidth = 0;
 
         int childState = 0;
-        int sumWidth = 0;
         int rowCount = 0;
+        int sumWidth = 0;
+        int sumHeight = 0;
 
+        /*int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 
-      /* int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-       int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-       int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-       int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-
-       //Measure Width
+        //Measure Width
        if (widthMode == MeasureSpec.EXACTLY) {
            //Must be this size
            System.out.println("EXACTLY");
@@ -123,24 +149,34 @@ public class TagLayout extends ViewGroup {
 
         // Iterate through all children, measuring them and computing our dimensions
         // from their size.
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < getChildCount(); i++) {
             final View child = getChildAt(i);
 
             if (child.getVisibility() == GONE)
                 continue;
 
+
+
+
             // Measure the child.
             measureChild(child, widthMeasureSpec, heightMeasureSpec);
+            LinearLayout.LayoutParams lp = (LayoutParams) child.getLayoutParams();
+            sumWidth += (child.getMeasuredWidth() + lp.leftMargin + lp.rightMargin);
+            maxWidth = Math.max(sumWidth, maxWidth);
 
-            sumWidth += child.getMeasuredWidth();
 
-            if ((sumWidth / deviceWidth) > rowCount) {
-                maxHeight += child.getMeasuredHeight();
+
+            if (sumWidth > deviceWidth) {
+                maxHeight += (child.getMeasuredHeight() + lp.topMargin + lp.bottomMargin);
                 rowCount++;
+                sumWidth = 0;
+                newRow = true;
 
             } else {
+                newRow = false;
                 maxHeight = Math.max(maxHeight, child.getMeasuredHeight());
             }
+
             childState = combineMeasuredStates(childState, child.getMeasuredState());
         }
 
@@ -149,6 +185,6 @@ public class TagLayout extends ViewGroup {
 
 
         // Report our final dimensions.
-        setMeasuredDimension(resolveSizeAndState(500, widthMeasureSpec, childState), resolveSizeAndState(500, heightMeasureSpec, childState << MEASURED_HEIGHT_STATE_SHIFT));
+        setMeasuredDimension(resolveSizeAndState(maxWidth, widthMeasureSpec, childState), resolveSizeAndState(maxHeight, heightMeasureSpec, childState << MEASURED_HEIGHT_STATE_SHIFT));
     }
 }

@@ -282,185 +282,195 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 rsb:showLabels="true" />-->
-            <CheckBox
-                android:layout_margin="5dp"
-                android:id="@+id/checkbox1"
-                android:text="@string/all"
+
+
+            <com.example.leon.movienightinandroid.TagLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/custom_checkbox" />
-        
-            <CheckBox
-                android:layout_margin="5dp"
-                android:id="@+id/checkbox2"
-                android:text="@string/action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/custom_checkbox" />
-    
-            <CheckBox
-                android:layout_margin="5dp"
-                android:id="@+id/checkbox3"
-                android:text="@string/action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/custom_checkbox" />
-    
-            <CheckBox
-                android:layout_margin="5dp"
-                android:id="@+id/checkbox4"
-                android:text="@string/action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/custom_checkbox" />
-    
-            <CheckBox
-                android:layout_margin="5dp"
-                android:id="@+id/checkbox5"
-                android:text="@string/action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/custom_checkbox" />
-    
-            <CheckBox
-                android:layout_margin="5dp"
-                android:id="@+id/checkbox6"
-                android:text="@string/action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/custom_checkbox" />
-    
-            <CheckBox
-                android:layout_margin="5dp"
-                android:id="@+id/checkbox7"
-                android:text="@string/action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/custom_checkbox" />
-    
-            <CheckBox
-                android:layout_margin="5dp"
-                android:id="@+id/checkbox8"
-                android:text="@string/action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/custom_checkbox" />
-    
-            <CheckBox
-                android:layout_margin="5dp"
-                android:id="@+id/checkbox9"
-                android:text="@string/action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/custom_checkbox" />
-    
-            <CheckBox
-                android:layout_margin="5dp"
-                android:id="@+id/checkbox10"
-                android:text="@string/action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/custom_checkbox" />
-    
-            <CheckBox
-                android:layout_margin="5dp"
-                android:id="@+id/checkbox11"
-                android:text="@string/action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/custom_checkbox" />
-    
-            <CheckBox
-                android:layout_margin="5dp"
-                android:id="@+id/checkbox12"
-                android:text="@string/action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/custom_checkbox" />
-    
-            <CheckBox
-                android:layout_margin="5dp"
-                android:id="@+id/checkbox13"
-                android:text="@string/action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/custom_checkbox" />
-    
-            <CheckBox
-                android:layout_margin="5dp"
-                android:id="@+id/checkbox14"
-                android:text="@string/action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/custom_checkbox" />
-    
-            <CheckBox
-                android:layout_margin="5dp"
-                android:id="@+id/checkbox15"
-                android:text="@string/action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/custom_checkbox" />
-    
-            <CheckBox
-                android:layout_margin="5dp"
-                android:id="@+id/checkbox16"
-                android:text="@string/action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/custom_checkbox" />
-    
-            <CheckBox
-                android:layout_margin="5dp"
-                android:id="@+id/checkbox17"
-                android:text="@string/action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/custom_checkbox" />
-    
-            <CheckBox
-                android:layout_margin="5dp"
-                android:id="@+id/checkbox18"
-                android:text="@string/action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/custom_checkbox" />
-    
-            <CheckBox
-                android:layout_margin="5dp"
-                android:id="@+id/checkbox19"
-                android:text="@string/action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/custom_checkbox" />
-    
-            <CheckBox
-                android:layout_margin="5dp"
-                android:id="@+id/checkbox20"
-                android:text="@string/action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/custom_checkbox" />
+                android:background="@android:color/holo_orange_dark">
+
+
+                <CheckBox
+                    android:layout_margin="5dp"
+                    android:id="@+id/checkbox1"
+                    android:text="@string/all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:background="@drawable/custom_checkbox" />
+
+                <CheckBox
+                    android:layout_margin="5dp"
+                    android:id="@+id/checkbox2"
+                    android:text="@string/action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:background="@drawable/custom_checkbox" />
+
+                <CheckBox
+                    android:layout_margin="5dp"
+                    android:id="@+id/checkbox3"
+                    android:text="@string/action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:background="@drawable/custom_checkbox" />
+
+                <CheckBox
+                    android:layout_margin="5dp"
+                    android:id="@+id/checkbox4"
+                    android:text="@string/action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:background="@drawable/custom_checkbox" />
+
+                <CheckBox
+                    android:layout_margin="5dp"
+                    android:id="@+id/checkbox5"
+                    android:text="@string/action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:background="@drawable/custom_checkbox" />
+
+                <CheckBox
+                    android:layout_margin="5dp"
+                    android:id="@+id/checkbox6"
+                    android:text="@string/action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:background="@drawable/custom_checkbox" />
+
+                <CheckBox
+                    android:layout_margin="5dp"
+                    android:id="@+id/checkbox7"
+                    android:text="@string/action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:background="@drawable/custom_checkbox" />
+
+                <CheckBox
+                    android:layout_margin="5dp"
+                    android:id="@+id/checkbox8"
+                    android:text="@string/action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:background="@drawable/custom_checkbox" />
+
+                <CheckBox
+                    android:layout_margin="5dp"
+                    android:id="@+id/checkbox9"
+                    android:text="@string/action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:background="@drawable/custom_checkbox" />
+
+                <CheckBox
+                    android:layout_margin="5dp"
+                    android:id="@+id/checkbox10"
+                    android:text="@string/action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:background="@drawable/custom_checkbox" />
+
+                <CheckBox
+                    android:layout_margin="5dp"
+                    android:id="@+id/checkbox11"
+                    android:text="@string/action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:background="@drawable/custom_checkbox" />
+
+                <CheckBox
+                    android:layout_margin="5dp"
+                    android:id="@+id/checkbox12"
+                    android:text="@string/action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:background="@drawable/custom_checkbox" />
+
+                <CheckBox
+                    android:layout_margin="5dp"
+                    android:id="@+id/checkbox13"
+                    android:text="@string/action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:background="@drawable/custom_checkbox" />
+
+                <CheckBox
+                    android:layout_margin="5dp"
+                    android:id="@+id/checkbox14"
+                    android:text="@string/action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:background="@drawable/custom_checkbox" />
+
+                <CheckBox
+                    android:layout_margin="5dp"
+                    android:id="@+id/checkbox15"
+                    android:text="@string/action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:background="@drawable/custom_checkbox" />
+
+                <CheckBox
+                    android:layout_margin="5dp"
+                    android:id="@+id/checkbox16"
+                    android:text="@string/action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:background="@drawable/custom_checkbox" />
+
+                <CheckBox
+                    android:layout_margin="5dp"
+                    android:id="@+id/checkbox17"
+                    android:text="@string/action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:background="@drawable/custom_checkbox" />
+
+                <CheckBox
+                    android:layout_margin="5dp"
+                    android:id="@+id/checkbox18"
+                    android:text="@string/action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:background="@drawable/custom_checkbox" />
+
+                <CheckBox
+                    android:layout_margin="5dp"
+                    android:id="@+id/checkbox19"
+                    android:text="@string/action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:background="@drawable/custom_checkbox" />
+
+                <CheckBox
+                    android:layout_margin="5dp"
+                    android:id="@+id/checkbox20"
+                    android:text="@string/action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:background="@drawable/custom_checkbox" />
+
+            </com.example.leon.movienightinandroid.TagLayout>
             
             
     
