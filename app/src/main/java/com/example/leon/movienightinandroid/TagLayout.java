@@ -9,10 +9,16 @@ import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.Display;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Leon on 19.2.2018..
@@ -40,10 +46,34 @@ public class TagLayout extends LinearLayout {
         Point deviceDisplay = new Point();
         display.getSize(deviceDisplay);
         deviceWidth = deviceDisplay.x;
+
+        for (int x = 0; x < getChildCount(); x++) {
+            CheckBox checkBox = (CheckBox) getChildAt(x);
+
+            checkBox.setOnClickListener(v -> {
+                Toast.makeText(v.getContext(), checkBox.getText(), Toast.LENGTH_SHORT).show();
+            });
+        }
+    }
+
+    public void setCheckedGenres(String[] genres) {
+        List<String> listGenres = Arrays.asList(genres);
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            if (child instanceof CheckBox) {
+                CheckBox ch = (CheckBox)child;
+                String text = ch.getText().toString();
+
+                if (listGenres.contains(text)) {
+                    ch.setChecked(true);
+                }
+            }
+        }
     }
 
     @Override
     protected void onLayout(boolean b, int i, int i1, int i2, int i3) {
+
         boolean newRow;
         final int rootLeft = getPaddingLeft();
         final int rootRight = getMeasuredWidth() - getPaddingRight();
@@ -66,6 +96,45 @@ public class TagLayout extends LinearLayout {
         for (int x = 0; x < getChildCount(); x++) {
             View child = getChildAt(x);
             if (child.getVisibility() == GONE) return;
+
+            if (child instanceof CheckBox) {
+                CheckBox checkBox = (CheckBox)child;
+
+                checkBox.setOnClickListener(v -> {
+                    if (checkBox.getText().equals("All")) {
+                        for (int y = 1; y < getChildCount(); y++) {
+                            CheckBox ch = (CheckBox)getChildAt(y);
+                            ch.setChecked(false);
+                        }
+                    } else {
+                        int count = 0;
+                        for (int y = 1; y < getChildCount(); y++) {
+                            CheckBox ch = (CheckBox)getChildAt(y);
+                            if (ch.isChecked()) {
+                                count++;
+                            } else {
+                                break;
+                            }
+                        }
+
+                        if (count == getChildCount()-1) {
+
+                            for (int y = 0; y < getChildCount(); y++) {
+                                CheckBox ch = (CheckBox)getChildAt(y);
+                                if (y == 0) {
+                                    ch.setChecked(true);
+                                } else {
+                                    ch.setChecked(false);
+                                }
+
+                            }
+                        } else {
+                            CheckBox ch = (CheckBox)getChildAt(0);
+                            ch.setChecked(false);
+                        }
+                    }
+                });
+            }
 
             child.measure(MeasureSpec.makeMeasureSpec(rootWidth, MeasureSpec.AT_MOST), MeasureSpec.makeMeasureSpec(rootHeight, MeasureSpec.AT_MOST));
             childWidth = child.getMeasuredWidth();
@@ -114,21 +183,39 @@ public class TagLayout extends LinearLayout {
         }
     }
 
+    public List<String> getCheckedValues() {
+        List<String> values = new ArrayList<>();
 
+        for(int x = 0; x < getChildCount(); x++) {
+            View child = getChildAt(x);
+            if (child instanceof CheckBox) {
+                CheckBox ch = (CheckBox)child;
+
+                if (!ch.isChecked()) continue;
+
+                if (x == 0) {
+                    values.add(ch.getText().toString());
+                    break;
+                } else {
+                    values.add(ch.getText().toString());
+                }
+            }
+        }
+
+        return values;
+    }
 
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
-        boolean newRow;
         // Measurement will ultimately be computing these values.
         int maxHeight = 0;
         int maxWidth = 0;
 
         int childState = 0;
-        int rowCount = 0;
         int sumWidth = 0;
-        int sumHeight = 0;
+        int maxChildHeight = 0;
 
         /*int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
@@ -165,20 +252,26 @@ public class TagLayout extends LinearLayout {
             maxWidth = Math.max(sumWidth, maxWidth);
 
 
+            maxChildHeight = Math.max(maxChildHeight, child.getMeasuredHeight() + lp.bottomMargin + lp.topMargin);
+
+
+
 
             if (sumWidth > deviceWidth) {
-                maxHeight += (child.getMeasuredHeight() + lp.topMargin + lp.bottomMargin);
-                rowCount++;
+                maxHeight += maxChildHeight;
                 sumWidth = 0;
-                newRow = true;
+                maxChildHeight = 0;
 
             } else {
-                newRow = false;
                 maxHeight = Math.max(maxHeight, child.getMeasuredHeight());
             }
 
             childState = combineMeasuredStates(childState, child.getMeasuredState());
         }
+
+        maxHeight += maxChildHeight;
+
+
 
         // Check against our minimum height and width
         maxHeight = Math.max(maxHeight, getSuggestedMinimumHeight());
@@ -187,4 +280,6 @@ public class TagLayout extends LinearLayout {
         // Report our final dimensions.
         setMeasuredDimension(resolveSizeAndState(maxWidth, widthMeasureSpec, childState), resolveSizeAndState(maxHeight, heightMeasureSpec, childState << MEASURED_HEIGHT_STATE_SHIFT));
     }
+
+
 }

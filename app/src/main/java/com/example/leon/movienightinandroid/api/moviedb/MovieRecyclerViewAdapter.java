@@ -1,67 +1,39 @@
 package com.example.leon.movienightinandroid.api.moviedb;
 
+import android.app.Activity;
+import android.arch.lifecycle.LifecycleOwner;
 import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
+import com.example.leon.movienightinandroid.MainViewModel;
 import com.example.leon.movienightinandroid.R;
 import com.example.leon.movienightinandroid.api.moviedb.model.Movie;
 import com.example.leon.movienightinandroid.api.moviedb.model.Page;
 import com.example.leon.movienightinandroid.databinding.ItemMovieBinding;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Leon on 2/4/2018.
  */
 
-public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecyclerViewAdapter.MovieViewHolder> implements Observer<Page> {
-    private Mode mMode;
-    private Page mLastPage;
+public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecyclerViewAdapter.MovieViewHolder> {
 
-    public enum Mode {
-        SEARCH_ALL,
-        SEARCH_MOVIES,
-        SEARCH_TV,
-        DISCOVER_MOVIES,
-        DISCOVER_TV
-    }
-
-
-    private final List<Movie> mMovies;
-    private final UrlContracts.TheMovieService mMovieService;
-    private boolean isLoanding = true;
+    private final MainViewModel mViewModel;
 
     @Inject
-    public MovieRecyclerViewAdapter(UrlContracts.TheMovieService movieService){
-        mMovies = new ArrayList<>();
-        mMovieService = movieService;
-    }
-
-    public void clear() {
-        mMovies.clear();
-        notifyDataSetChanged();
+    public MovieRecyclerViewAdapter(MainViewModel viewModel, Activity activity) {
+        viewModel.getPageLiveData().observe((LifecycleOwner) activity, this::notifyPage);
+        mViewModel = viewModel;
     }
 
     @Override
     public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movie, parent, false);
-
-
         ItemMovieBinding itemMovieBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.item_movie, parent, false);
 
         return new MovieViewHolder(itemMovieBinding);
@@ -71,7 +43,7 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
     public void onBindViewHolder(MovieViewHolder holder, int position) {
         ItemMovieBinding binding = holder.binding;
 
-        List<Movie> movies = new ArrayList<>(mMovies);
+        List<Movie> movies = new ArrayList<>(mViewModel.getPageLiveData().getMovies());
         String title = movies.get(position).original_title;
         String name = movies.get(position).original_name;
         binding.sortTextView.setText((title == null) ? name : title);
@@ -79,55 +51,20 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
 
     @Override
     public int getItemCount() {
-        return mMovies.size();
+        return mViewModel.getPageLiveData().getMovies().size();
     }
 
 
 
-    @Override
-    public void onSubscribe(Disposable d) {
-        isLoanding = true;
-    }
-
-    @Override
-    public void onNext(Page page) {
-        System.out.println(page.results.size());
-        for (Movie movie: page.results) {
-            System.out.println(movie.original_title);
-            System.out.println(movie.id);
-        }
-        addPage(page);
-    }
-
-    @Override
-    public void onError(Throwable e) {
-        System.out.println(e.getMessage());
-    }
-
-    @Override
-    public void onComplete() {
-        isLoanding = false;
+    public void clear() {
+        mViewModel.getPageLiveData().getMovies().clear();
+        notifyDataSetChanged();
     }
 
 
-
-    public boolean isLastPage() {
-        return (mLastPage.total_pages == mLastPage.page);
+    private void notifyPage(Page page) {
+        notifyItemRangeInserted(mViewModel.getPageLiveData().getMovies().size() - 1, page.results.size());
     }
-
-    public int getNextPage() {
-        return mLastPage.page + 1;
-    }
-
-    public Page getLastPage() {
-        return mLastPage;
-    }
-
-
-    public boolean isLoanding() {
-        return isLoanding;
-    }
-
 
     public static class MovieViewHolder extends RecyclerView.ViewHolder {
 
@@ -139,20 +76,8 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
         }
     }
 
-    private void addPage(Page page) {
-        mLastPage = page;
-        mMovies.addAll(page.results);
-        notifyDataSetChanged();
-       // notifyItemRangeInserted(mMovies.size() - 1, page.results.size());
 
-    }
 
-    public void setMode(Mode mode) {
-        mMode = mode;
-    }
 
-    public Mode getMode() {
-        return mMode;
-    }
 
 }

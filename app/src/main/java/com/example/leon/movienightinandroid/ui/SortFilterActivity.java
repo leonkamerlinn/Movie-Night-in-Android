@@ -4,13 +4,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.leon.movienightinandroid.R;
 import com.example.leon.movienightinandroid.databinding.ActivitySortFilterBinding;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -31,6 +38,21 @@ public class SortFilterActivity extends DaggerAppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(getResources().getString(R.string.filter_title));
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_black_24dp);
+
+        String[] items = getResources().getStringArray(R.array.filter_gener_items);
+        for(String item: items) {
+            CheckBox checkBox  = (CheckBox) LayoutInflater.from(this).inflate(R.layout.checkbox_item, null, false);
+            checkBox.setText(item);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.setMargins(10, 10, 10, 10);
+            checkBox.setLayoutParams(params);
+            binding.tagLayout.addView(checkBox);
+
+        }
+        Intent intent = getIntent();
+        if (intent.hasExtra("values")) {
+            binding.tagLayout.setCheckedGenres(intent.getStringArrayExtra("values"));
+        }
 
 
 
@@ -54,7 +76,9 @@ public class SortFilterActivity extends DaggerAppCompatActivity {
         Intent returnIntent = new Intent();
         switch (item.getItemId()) {
             case R.id.menu_item_done:
-                returnIntent.putExtra("result","message");
+                List<String> values = binding.tagLayout.getCheckedValues();
+                String[] arr = values.toArray(new String[values.size()]);
+                returnIntent.putExtra("result", arr);
                 setResult(RESULT_OK, returnIntent);
                 finish();
                 break;

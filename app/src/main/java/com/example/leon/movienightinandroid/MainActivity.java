@@ -2,6 +2,8 @@ package com.example.leon.movienightinandroid;
 
 import android.app.Activity;
 import android.app.SearchManager;
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,9 +17,9 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.leon.movienightinandroid.api.moviedb.MovieRecyclerViewAdapter;
+import com.example.leon.movienightinandroid.api.moviedb.PageLiveData.Mode;
 import com.example.leon.movienightinandroid.api.moviedb.UrlContracts;
 import com.example.leon.movienightinandroid.api.moviedb.dialog.TimePickerFragment;
-import com.example.leon.movienightinandroid.api.moviedb.model.Page;
 import com.example.leon.movienightinandroid.databinding.ActivityMainBinding;
 import com.example.leon.movienightinandroid.ui.SortFilterActivity;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
@@ -33,7 +35,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.example.leon.movienightinandroid.api.moviedb.MovieRecyclerViewAdapter.Mode.DISCOVER_MOVIES;
+import static com.example.leon.movienightinandroid.api.moviedb.PageLiveData.Mode.SEARCH_MOVIES;
 
 
 public class MainActivity extends DaggerAppCompatActivity {
@@ -42,6 +44,7 @@ public class MainActivity extends DaggerAppCompatActivity {
     private Observable<Boolean> mRadioGroupObservable;
     private LinearLayoutManager mLayoutManager;
     private String mQuery;
+    String[] checkedGenres = null;
 
     @Inject
     ActivityMainBinding binding;
@@ -49,6 +52,10 @@ public class MainActivity extends DaggerAppCompatActivity {
     MovieRecyclerViewAdapter mMovieRecyclerViewAdapter;
     @Inject
     UrlContracts.TheMovieService movieService;
+
+
+    @Inject
+    MainViewModel viewModel;
 
 
 
@@ -68,6 +75,9 @@ public class MainActivity extends DaggerAppCompatActivity {
         mRadioGroupObservable = Observable.merge(radioAllObservable, radioMovieObservable, radioTvObservable);
 
 
+
+
+
         mLayoutManager = new LinearLayoutManager(this);
         binding.recyclerView.setLayoutManager(mLayoutManager);
         binding.recyclerView.setHasFixedSize(false);
@@ -75,23 +85,7 @@ public class MainActivity extends DaggerAppCompatActivity {
         binding.recyclerView.addOnScrollListener(new RecyclerViewScroller());
 
 
-        Observable<Page> one = movieService.discoverMovies(1)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
 
-        Observable<Page> two = movieService.discoverMovies(2)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-
-        Observable<Page> three = movieService.discoverMovies(3)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-
-
-        Observable.concat(one, two, three).subscribe(mMovieRecyclerViewAdapter);
-
-
-        mMovieRecyclerViewAdapter.setMode(DISCOVER_MOVIES);
     }
 
 
@@ -99,7 +93,6 @@ public class MainActivity extends DaggerAppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.home_menu, menu);
-
 
         // Associate searchable configuration with the SearchView
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -115,9 +108,8 @@ public class MainActivity extends DaggerAppCompatActivity {
 
         Observable.combineLatest(stringObservable, mRadioGroupObservable, (query, aBoolean) -> {
             mQuery = query;
-            Toast.makeText(MainActivity.this, query,Toast.LENGTH_SHORT).show();
             mMovieRecyclerViewAdapter.clear();
-            getSupportActionBar().setTitle(query);
+            viewModel.setTitle(query);
 
             if (!mSearchView.isIconified()) {
                 mSearchView.setQuery(null, false);
@@ -127,27 +119,27 @@ public class MainActivity extends DaggerAppCompatActivity {
 
             if (binding.radioAll.isChecked()) {
 
-                mMovieRecyclerViewAdapter.setMode(MovieRecyclerViewAdapter.Mode.SEARCH_ALL);
+                viewModel.getPageLiveData().setMode(Mode.SEARCH_ALL);
                 movieService.searchMulti(query)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(mMovieRecyclerViewAdapter);
+                        .subscribe(viewModel.getPageLiveData());
 
             } else if (binding.radioTv.isChecked()) {
 
-                mMovieRecyclerViewAdapter.setMode(MovieRecyclerViewAdapter.Mode.SEARCH_TV);
+                viewModel.getPageLiveData().setMode(Mode.SEARCH_TV);
                 movieService.searchTv(query)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(mMovieRecyclerViewAdapter);
+                        .subscribe(viewModel.getPageLiveData());
 
             } else if (binding.radioMovie.isChecked()) {
 
-                mMovieRecyclerViewAdapter.setMode(MovieRecyclerViewAdapter.Mode.SEARCH_MOVIES);
+                viewModel.getPageLiveData().setMode(SEARCH_MOVIES);
                 movieService.searchMovie(query)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(mMovieRecyclerViewAdapter);
+                        .subscribe(viewModel.getPageLiveData());
 
             }
 
@@ -196,6 +188,9 @@ public class MainActivity extends DaggerAppCompatActivity {
             case R.id.item_sort:
                 //SortFilterDialog.newInstance().show(getSupportFragmentManager(), SortFilterDialog.TAG);
                 Intent intent = new Intent(this, SortFilterActivity.class);
+                if (checkedGenres != null) {
+                    intent.putExtra("values", checkedGenres);
+                }
                 startActivityForResult(intent, REQUEST_CODE);
                 break;
 
@@ -209,8 +204,8 @@ public class MainActivity extends DaggerAppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE) {
             if(resultCode == Activity.RESULT_OK){
-                String result = data.getStringExtra("result");
-                Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+                String[] result = data.getStringArrayExtra("result");
+                checkedGenres = result;
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 //Write your code if there's no
                 Toast.makeText(this, "cancel", Toast.LENGTH_LONG).show();
@@ -239,18 +234,18 @@ public class MainActivity extends DaggerAppCompatActivity {
             int totalItemCount = mLayoutManager.getItemCount();
             //adapter position of the first visible view.
             int lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
-            int visibleThreshold = 5;
+            int visibleThreshold = 20;
 
-            if (!mMovieRecyclerViewAdapter.isLoanding() && totalItemCount <= lastVisibleItem + visibleThreshold) {
+            if (!viewModel.getPageLiveData().isLoading().getValue() && totalItemCount <= lastVisibleItem + visibleThreshold) {
                 //mMovieRecyclerViewAdapter.loadNextPage();
 
-                switch (mMovieRecyclerViewAdapter.getMode()) {
+                switch (viewModel.getPageLiveData().getMode()) {
                     case DISCOVER_MOVIES:
-                        movieService.discoverMovies(mMovieRecyclerViewAdapter.getNextPage())
-                            .skipWhile(page -> mMovieRecyclerViewAdapter.isLastPage())
+                        movieService.discoverMovies(viewModel.getPageLiveData().getNextPage())
+                            .skipWhile(page -> viewModel.getPageLiveData().isLastPage())
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(mMovieRecyclerViewAdapter);
+                            .subscribe(viewModel.getPageLiveData());
                         break;
 
                     case DISCOVER_TV:
@@ -260,21 +255,21 @@ public class MainActivity extends DaggerAppCompatActivity {
                         movieService.searchMovie(mQuery)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(mMovieRecyclerViewAdapter);
+                                .subscribe(viewModel.getPageLiveData());
                         break;
 
                     case SEARCH_TV:
                         movieService.searchTv(mQuery)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(mMovieRecyclerViewAdapter);
+                                .subscribe(viewModel.getPageLiveData());
                         break;
 
                     case SEARCH_ALL:
                         movieService.searchMulti(mQuery)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(mMovieRecyclerViewAdapter);
+                                .subscribe(viewModel.getPageLiveData());
                         break;
                 }
 
