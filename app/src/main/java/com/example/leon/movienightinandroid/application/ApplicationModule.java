@@ -1,4 +1,4 @@
-package com.example.leon.movienightinandroid.di.module;
+package com.example.leon.movienightinandroid.application;
 
 import android.app.Application;
 import android.content.Context;

@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.content.Context;
-import android.databinding.ObservableField;
 
 import com.example.leon.movienightinandroid.api.moviedb.PageLiveData;
 import com.example.leon.movienightinandroid.api.moviedb.UrlContracts;

@@ -1,4 +1,4 @@
-package com.example.leon.movienightinandroid;
+package com.example.leon.movienightinandroid.layout;
 
 /**
  * Created by Leon on 2/19/2018.

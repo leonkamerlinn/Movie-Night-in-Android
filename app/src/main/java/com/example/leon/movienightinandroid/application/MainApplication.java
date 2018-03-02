@@ -1,9 +1,6 @@
-package com.example.leon.movienightinandroid;
+package com.example.leon.movienightinandroid.application;
 
 import android.support.multidex.MultiDex;
-
-import com.example.leon.movienightinandroid.di.component.ApplicationComponent;
-import com.example.leon.movienightinandroid.di.component.DaggerApplicationComponent;
 
 import dagger.android.AndroidInjector;
 import dagger.android.support.DaggerApplication;

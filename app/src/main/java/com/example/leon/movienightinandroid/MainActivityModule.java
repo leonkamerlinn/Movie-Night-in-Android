@@ -1,26 +1,15 @@
-package com.example.leon.movienightinandroid.di.module;
+package com.example.leon.movienightinandroid;
 
 import android.app.Activity;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.support.v4.app.FragmentActivity;
-import android.view.LayoutInflater;
-import android.widget.Toast;
 
-import com.example.leon.movienightinandroid.BuildConfig;
-import com.example.leon.movienightinandroid.MainActivity;
-import com.example.leon.movienightinandroid.MainViewModel;
-import com.example.leon.movienightinandroid.R;
-import com.example.leon.movienightinandroid.User;
 import com.example.leon.movienightinandroid.api.moviedb.MainViewModelFactory;
-import com.example.leon.movienightinandroid.api.moviedb.dialog.SortFilterDialog;
+import com.example.leon.movienightinandroid.application.ApplicationModule;
 import com.example.leon.movienightinandroid.databinding.ActivityMainBinding;
-import com.example.leon.movienightinandroid.databinding.DialogSortFilterBinding;
 import com.example.leon.movienightinandroid.di.qualifier.ActivityContext;
-
-import javax.inject.Singleton;
 
 import dagger.Binds;
 import dagger.Module;

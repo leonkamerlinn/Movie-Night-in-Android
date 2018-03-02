@@ -3,10 +3,10 @@ package com.example.leon.movienightinandroid.di;
 
 import com.example.leon.movienightinandroid.MainActivity;
 import com.example.leon.movienightinandroid.api.moviedb.dialog.SortFilterDialog;
-import com.example.leon.movienightinandroid.di.module.MainActivityModule;
-import com.example.leon.movienightinandroid.di.module.SortFilterActivityModule;
-import com.example.leon.movienightinandroid.di.module.SortFilterDialogModule;
-import com.example.leon.movienightinandroid.ui.SortFilterActivity;
+import com.example.leon.movienightinandroid.MainActivityModule;
+import com.example.leon.movienightinandroid.ui.sortfilter.SortFilterActivityModule;
+import com.example.leon.movienightinandroid.ui.sortfilter.SortFilterDialogModule;
+import com.example.leon.movienightinandroid.ui.sortfilter.SortFilterActivity;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;

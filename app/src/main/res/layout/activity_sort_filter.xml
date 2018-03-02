@@ -7,7 +7,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.example.leon.movienightinandroid.ui.SortFilterActivity">
+        tools:context="com.example.leon.movienightinandroid.ui.sortfilter.SortFilterActivity">
 
 
 
@@ -113,7 +113,7 @@
         
             
     
-        <com.example.leon.movienightinandroid.TagLayout
+        <com.example.leon.movienightinandroid.layout.TagLayout
             android:id="@+id/tagLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

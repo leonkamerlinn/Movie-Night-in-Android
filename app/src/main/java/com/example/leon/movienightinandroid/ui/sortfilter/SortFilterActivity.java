@@ -1,18 +1,13 @@
-package com.example.leon.movienightinandroid.ui;
+package com.example.leon.movienightinandroid.ui.sortfilter;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.leon.movienightinandroid.R;
 import com.example.leon.movienightinandroid.databinding.ActivitySortFilterBinding;

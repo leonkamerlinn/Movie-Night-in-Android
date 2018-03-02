@@ -1,10 +1,8 @@
-package com.example.leon.movienightinandroid.di.component;
+package com.example.leon.movienightinandroid.application;
 
 import android.app.Application;
 
-import com.example.leon.movienightinandroid.MainApplication;
 import com.example.leon.movienightinandroid.di.ActivityBuilder;
-import com.example.leon.movienightinandroid.di.module.ApplicationModule;
 
 import javax.inject.Singleton;
 

@@ -1,13 +1,13 @@
-package com.example.leon.movienightinandroid.di.module;
+package com.example.leon.movienightinandroid.ui.sortfilter;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.view.LayoutInflater;
 
+import com.example.leon.movienightinandroid.MainActivityModule;
 import com.example.leon.movienightinandroid.R;
 import com.example.leon.movienightinandroid.api.moviedb.dialog.SortFilterDialog;
 import com.example.leon.movienightinandroid.databinding.DialogSortFilterBinding;
-import com.example.leon.movienightinandroid.di.qualifier.ActivityContext;
 
 import dagger.Module;
 import dagger.Provides;

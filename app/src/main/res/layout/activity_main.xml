@@ -33,7 +33,7 @@
 				android:id="@+id/toolbar"
 				android:layout_width="match_parent"
 				android:layout_height="?attr/actionBarSize"
-				app:title="@{model.pageLiveData.message}"
+				app:title="@string/app_name"
 				android:background="@android:color/white"
 				app:popupTheme="@style/AppTheme.PopupOverlay" />
 			

@@ -1,17 +1,13 @@
-package com.example.leon.movienightinandroid.di.module;
+package com.example.leon.movienightinandroid.ui.sortfilter;
 
 import android.app.Activity;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 
-import com.example.leon.movienightinandroid.BuildConfig;
-import com.example.leon.movienightinandroid.MainActivity;
 import com.example.leon.movienightinandroid.R;
-import com.example.leon.movienightinandroid.User;
-import com.example.leon.movienightinandroid.databinding.ActivityMainBinding;
+import com.example.leon.movienightinandroid.application.ApplicationModule;
 import com.example.leon.movienightinandroid.databinding.ActivitySortFilterBinding;
 import com.example.leon.movienightinandroid.di.qualifier.ActivityContext;
-import com.example.leon.movienightinandroid.ui.SortFilterActivity;
 
 import dagger.Binds;
 import dagger.Module;

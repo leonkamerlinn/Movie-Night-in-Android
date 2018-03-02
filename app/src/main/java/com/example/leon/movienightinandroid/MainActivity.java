@@ -2,8 +2,6 @@ package com.example.leon.movienightinandroid;
 
 import android.app.Activity;
 import android.app.SearchManager;
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,7 +19,7 @@ import com.example.leon.movienightinandroid.api.moviedb.PageLiveData.Mode;
 import com.example.leon.movienightinandroid.api.moviedb.UrlContracts;
 import com.example.leon.movienightinandroid.api.moviedb.dialog.TimePickerFragment;
 import com.example.leon.movienightinandroid.databinding.ActivityMainBinding;
-import com.example.leon.movienightinandroid.ui.SortFilterActivity;
+import com.example.leon.movienightinandroid.ui.sortfilter.SortFilterActivity;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding2.support.v7.widget.SearchViewQueryTextEvent;
 import com.jakewharton.rxbinding2.widget.RxCompoundButton;
