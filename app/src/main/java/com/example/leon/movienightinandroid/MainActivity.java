@@ -164,7 +164,7 @@ public class MainActivity extends DaggerAppCompatActivity {
                 //SortFilterDialog.newInstance().show(getSupportFragmentManager(), SortFilterDialog.TAG);
                 Intent intent = new Intent(this, SortFilterActivity.class);
                 if (checkedGenres != null && checkedGenres.length > 0) {
-                    intent.putExtra("values", checkedGenres);
+                    intent.putExtra(SortFilterActivity.GENRE_TAGS_EXTRA, checkedGenres);
                 }
                 startActivityForResult(intent, REQUEST_CODE);
                 break;
@@ -179,11 +179,16 @@ public class MainActivity extends DaggerAppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE) {
             if(resultCode == Activity.RESULT_OK){
-                String[] result = data.getStringArrayExtra("result");
-                checkedGenres = result;
+
+                if (data.hasExtra(SortFilterActivity.GENRE_TAGS_EXTRA)) {
+                    String[] result = data.getStringArrayExtra(SortFilterActivity.GENRE_TAGS_EXTRA);
+                    checkedGenres = result;
+                }
+
+
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 //Write your code if there's no
-                Toast.makeText(this, "cancel", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "canceled", Toast.LENGTH_LONG).show();
             }
         }
     }
