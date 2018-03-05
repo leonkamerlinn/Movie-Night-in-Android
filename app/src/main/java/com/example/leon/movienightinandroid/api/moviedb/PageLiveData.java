@@ -2,7 +2,6 @@ package com.example.leon.movienightinandroid.api.moviedb;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.databinding.ObservableBoolean;
 
 import com.example.leon.movienightinandroid.api.moviedb.model.Movie;
 import com.example.leon.movienightinandroid.api.moviedb.model.Page;
@@ -21,30 +20,18 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class PageLiveData extends LiveData<Page> implements Observer<Page> {
-
-    private final MutableLiveData<String> message;
-    private MutableLiveData<Boolean> mLoading;
-
-    private Mode mMode;
+    private final MutableLiveData<Boolean> mLoading;
+    private SearchFilter mMode;
     private Page mLastPage;
     private final List<Movie> mMovies;
 
-    public enum Mode {
-        SEARCH_ALL,
-        SEARCH_MOVIES,
-        SEARCH_TV,
-        DISCOVER_MOVIES,
-        DISCOVER_TV
-    }
 
 
-    public PageLiveData(UrlContracts.TheMovieService movieService) {
+
+    public PageLiveData(TheMovieService.Repository movieService) {
         mMovies = new ArrayList<>();
         mLoading = new MutableLiveData<>();
-        message = new MutableLiveData<>();
-        message.setValue("Hello");
         setLoading(true);
-
 
         Observable<Page> one = movieService.discoverMovies(1)
                 .subscribeOn(Schedulers.io())
@@ -62,12 +49,7 @@ public class PageLiveData extends LiveData<Page> implements Observer<Page> {
         Observable.concat(one, two, three).subscribe(this);
 
 
-        setMode(Mode.DISCOVER_MOVIES);
-    }
-
-
-    public LiveData<String> getMessage() {
-        return message;
+        setMode(SearchFilter.DISCOVER_MOVIES);
     }
 
     public List<Movie> getMovies() {
@@ -108,25 +90,19 @@ public class PageLiveData extends LiveData<Page> implements Observer<Page> {
 
     @Override
     public void onComplete() {
-
         setLoading(false);
     }
 
 
-    public void setMode(Mode mode) {
+    public void setMode(SearchFilter mode) {
         mMode = mode;
     }
 
-    public Mode getMode() {
+    public SearchFilter getFilter() {
         return mMode;
     }
 
-
     public LiveData<Boolean> isLoading() {
-        return mLoading;
-    }
-
-    public LiveData<Boolean> getLoading() {
         return mLoading;
     }
 

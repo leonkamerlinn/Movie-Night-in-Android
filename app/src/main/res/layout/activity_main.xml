@@ -4,13 +4,10 @@
 	
 	<data>
 		<import type="android.view.View" />
-		<import type="com.example.leon.movienightinandroid.api.moviedb.model.Page" />
-		<import type="com.example.leon.movienightinandroid.api.moviedb.PageLiveData" />
-		
-		<variable
-			name="model"
-			type="com.example.leon.movienightinandroid.MainViewModel" />
 
+		<variable
+			name="loading"
+			type="boolean"/>
 	</data>
 	
 	
@@ -83,16 +80,23 @@
 			app:layout_constraintBottom_toTopOf="@+id/progressBar"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
-		
+			app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+			android:visibility="@{loading ? View.GONE : View.VISIBLE}"/>
+
 		<ProgressBar
 			android:id="@+id/progressBar"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+
+			android:layout_marginStart="8dp"
+			android:layout_marginTop="8dp"
+			android:layout_marginEnd="8dp"
+			android:layout_marginBottom="8dp"
+			android:visibility="@{loading ? View.VISIBLE : View.GONE}"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			android:visibility="gone" />
+			app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
 	
 	
 	</android.support.constraint.ConstraintLayout>

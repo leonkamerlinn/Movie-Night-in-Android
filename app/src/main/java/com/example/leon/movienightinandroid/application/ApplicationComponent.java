@@ -2,7 +2,8 @@ package com.example.leon.movienightinandroid.application;
 
 import android.app.Application;
 
-import com.example.leon.movienightinandroid.di.ActivityBuilder;
+import com.example.leon.movienightinandroid.di.ActivityBindingModule;
+import com.example.leon.movienightinandroid.ui.sortfilter.SortFilterActivityModule;
 
 import javax.inject.Singleton;
 
@@ -17,18 +18,13 @@ import dagger.android.support.DaggerApplication;
  */
 
 @Singleton
-@Component(modules = {AndroidSupportInjectionModule.class, ApplicationModule.class, ActivityBuilder.class})
-public interface ApplicationComponent extends AndroidInjector<DaggerApplication> {
-
-    void inject(MainApplication mainApplication);
-
-    @Override
-    void inject(DaggerApplication daggerApplication);
+@Component(modules = {ApplicationModule.class, ActivityBindingModule.class, AndroidSupportInjectionModule.class})
+public interface ApplicationComponent extends AndroidInjector<MainApplication> {
 
     @Component.Builder
     interface Builder {
         @BindsInstance
-        Builder application(Application application);
+        ApplicationComponent.Builder application(Application application);
         ApplicationComponent build();
     }
 }

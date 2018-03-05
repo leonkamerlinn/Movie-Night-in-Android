@@ -15,7 +15,7 @@ import retrofit2.http.QueryMap;
  * Created by Leon on 2/4/2018.
  */
 
-public class UrlContracts {
+public class TheMovieService {
     public static final String BASE_URL = "https://api.themoviedb.org/3/";
 
 
@@ -28,7 +28,6 @@ public class UrlContracts {
 
 
     //filter
-
     public static final String VOTE_AVERAGE_GTE_QUERY = "vote_average.gte";
     public static final String VOTE_AVERAGE_LTE_QUERY = "vote_average.lte";
 
@@ -40,7 +39,6 @@ public class UrlContracts {
 
 
     //sort
-
     public static final String SORT_BY_POPULARITY_ASC = "popularity.asc";
     public static final String SORT_BY_POPULARITY_DESC = "popularity.desc";
 
@@ -57,7 +55,6 @@ public class UrlContracts {
     public static final String SORT_BY_VOTE_COUNT_DESC = "vote_count.desc";
 
     //url paths
-
     public static final String DISCOVER_MOVIE_PATH = "discover/movie";
     public static final String DISCOVER_TV_PATH = "discover/tv";
     public static final String GENERE_MOVIE_PATH = "genre/movie";
@@ -65,31 +62,31 @@ public class UrlContracts {
     public static final String SEARCH_TV_PATH = "search/tv";
     public static final String SEARCH_MULTI_PATH = "search/multi";
 
-    public interface TheMovieService {
-        @GET(UrlContracts.DISCOVER_MOVIE_PATH)
-        Observable<Page> discoverMovies(@Query(UrlContracts.PAGE_QUERY) int page, @QueryMap Map<String, Object> map);
+    public interface Repository {
+        @GET(TheMovieService.DISCOVER_MOVIE_PATH)
+        Observable<Page> discoverMovies(@Query(TheMovieService.PAGE_QUERY) int page, @QueryMap Map<String, Object> map);
 
-        @GET(UrlContracts.DISCOVER_MOVIE_PATH)
-        Observable<Page> discoverMovies(@Query(UrlContracts.PAGE_QUERY) int page);
+        @GET(DISCOVER_MOVIE_PATH)
+        Observable<Page> discoverMovies(@Query(TheMovieService.PAGE_QUERY) int page);
 
 
-        @GET(UrlContracts.DISCOVER_TV_PATH)
-        Observable<Page> discoverTv(@Query(UrlContracts.PAGE_QUERY) int page, @QueryMap Map<String, Object> map);
+        @GET(TheMovieService.DISCOVER_TV_PATH)
+        Observable<Page> discoverTv(@Query(TheMovieService.PAGE_QUERY) int page, @QueryMap Map<String, Object> map);
 
-        @GET(UrlContracts.DISCOVER_TV_PATH)
-        Observable<Page> discoverTv(@Query(UrlContracts.PAGE_QUERY) int page);
+        @GET(TheMovieService.DISCOVER_TV_PATH)
+        Observable<Page> discoverTv(@Query(TheMovieService.PAGE_QUERY) int page);
 
-        @GET(UrlContracts.GENERE_MOVIE_PATH)
+        @GET(TheMovieService.GENERE_MOVIE_PATH)
         Observable<List<Genre>> genres();
 
-        @GET(UrlContracts.SEARCH_MOVIE_PATH)
-        Observable<Page> searchMovie(@Query(UrlContracts.SEARCH_QUERY) String query);
+        @GET(TheMovieService.SEARCH_MOVIE_PATH)
+        Observable<Page> searchMovie(@Query(TheMovieService.SEARCH_QUERY) String query);
 
-        @GET(UrlContracts.SEARCH_TV_PATH)
-        Observable<Page> searchTv(@Query(UrlContracts.SEARCH_QUERY) String query);
+        @GET(TheMovieService.SEARCH_TV_PATH)
+        Observable<Page> searchTv(@Query(TheMovieService.SEARCH_QUERY) String query);
 
-        @GET(UrlContracts.SEARCH_MULTI_PATH)
-        Observable<Page> searchMulti(@Query(UrlContracts.SEARCH_QUERY) String query);
+        @GET(TheMovieService.SEARCH_MULTI_PATH)
+        Observable<Page> searchMulti(@Query(TheMovieService.SEARCH_QUERY) String query);
     }
 
     /*

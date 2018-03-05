@@ -4,7 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.example.leon.movienightinandroid.BuildConfig;
-import com.example.leon.movienightinandroid.api.moviedb.UrlContracts;
+import com.example.leon.movienightinandroid.api.moviedb.TheMovieService;
 import com.example.leon.movienightinandroid.di.qualifier.ApplicationContext;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
@@ -24,8 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public abstract class ApplicationModule {
     @Binds
-    @ApplicationContext
-    abstract Context provideContext(Application application);
+    abstract Context bindContext(Application application);
 
     @Provides
     static OkHttpClient provideOkHttpClient() {
@@ -34,7 +33,7 @@ public abstract class ApplicationModule {
                     Request original = chain.request();
                     HttpUrl httpUrl = original.url();
 
-                    HttpUrl newHttpUrl = httpUrl.newBuilder().addQueryParameter(UrlContracts.API_KEY_QUERY, BuildConfig.API_KEY).build();
+                    HttpUrl newHttpUrl = httpUrl.newBuilder().addQueryParameter(TheMovieService.API_KEY_QUERY, BuildConfig.API_KEY).build();
                     Request.Builder requestBuilder = original.newBuilder().url(newHttpUrl);
                     Request request = requestBuilder.build();
 
@@ -45,7 +44,7 @@ public abstract class ApplicationModule {
     @Provides
     static Retrofit provideRetrofit(OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
-                .baseUrl(UrlContracts.BASE_URL)
+                .baseUrl(TheMovieService.BASE_URL)
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -53,7 +52,7 @@ public abstract class ApplicationModule {
     }
 
     @Provides
-    static UrlContracts.TheMovieService provideMovieService(Retrofit retrofit) {
-        return retrofit.create(UrlContracts.TheMovieService.class);
+    static TheMovieService.Repository provideMovieService(Retrofit retrofit) {
+        return retrofit.create(TheMovieService.Repository.class);
     }
 }

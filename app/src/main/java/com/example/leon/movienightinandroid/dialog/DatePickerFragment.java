@@ -1,4 +1,4 @@
-package com.example.leon.movienightinandroid.api.moviedb.dialog;
+package com.example.leon.movienightinandroid.dialog;
 
 
 import android.app.DatePickerDialog;

@@ -6,7 +6,7 @@ import android.arch.lifecycle.ViewModel;
 import android.content.Context;
 
 import com.example.leon.movienightinandroid.api.moviedb.PageLiveData;
-import com.example.leon.movienightinandroid.api.moviedb.UrlContracts;
+import com.example.leon.movienightinandroid.api.moviedb.TheMovieService;
 
 /**
  * Created by Leon on 2/24/2018.
@@ -16,7 +16,7 @@ public class MainViewModel extends ViewModel {
     private PageLiveData mPageLiveData;
     private final MutableLiveData<String> mTitle;
 
-    public MainViewModel(Context context, UrlContracts.TheMovieService movieService) {
+    public MainViewModel(Context context, TheMovieService.Repository movieService) {
         mPageLiveData = new PageLiveData(movieService);
         mTitle = new MutableLiveData<>();
         setTitle(context.getResources().getString(R.string.app_name));

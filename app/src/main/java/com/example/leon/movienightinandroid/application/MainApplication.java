@@ -18,16 +18,8 @@ public class MainApplication extends DaggerApplication {
         MultiDex.install(this);
     }
 
-
-
     @Override
     protected AndroidInjector<? extends DaggerApplication> applicationInjector() {
-        ApplicationComponent applicationComponent = DaggerApplicationComponent.builder()
-                .application(this)
-                .build();
-
-        applicationComponent.inject(this);
-
-        return applicationComponent;
+        return DaggerApplicationComponent.builder().application(this).build();
     }
 }
