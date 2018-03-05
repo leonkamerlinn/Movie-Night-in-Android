@@ -8,6 +8,10 @@
 		<variable
 			name="loading"
 			type="boolean"/>
+
+		<variable
+			name="model"
+			type="com.example.leon.movienightinandroid.MainViewModel" />
 	</data>
 	
 	

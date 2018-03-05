@@ -9,16 +9,16 @@ import java.util.Calendar;
 public class DateInputMask implements TextWatcher {
 
     private final EditText mEditText;
+    private final DateSelection mDateSelection;
     private String current = "";
     private String ddmmyyyy = "DDMMYYYY";
     private Calendar cal = Calendar.getInstance();
 
-    public DateInputMask(EditText editText) {
+    public DateInputMask(EditText editText, DateSelection dateSelection) {
         mEditText = editText;
         mEditText.addTextChangedListener(this);
+        mDateSelection = dateSelection;
     }
-
-
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -66,8 +66,9 @@ public class DateInputMask implements TextWatcher {
 
             sel = sel < 0 ? 0 : sel;
             current = clean;
-            mEditText.setText(current);
-            mEditText.setSelection(sel < current.length() ? sel : current.length());
+            //mEditText.setText(current);
+            //mEditText.setSelection(sel < current.length() ? sel : current.length());
+            mDateSelection.onChange(current, sel);
         }
 
     }
@@ -75,5 +76,9 @@ public class DateInputMask implements TextWatcher {
     @Override
     public void afterTextChanged(Editable s) {
 
+    }
+
+    public interface DateSelection {
+        void onChange(String text, int selection);
     }
 }

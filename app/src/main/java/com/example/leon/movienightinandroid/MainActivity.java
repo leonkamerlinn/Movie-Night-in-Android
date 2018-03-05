@@ -58,6 +58,7 @@ public class MainActivity extends DaggerAppCompatActivity {
         setupMovieRecyclerView();
     }
 
+
     private void setupMovieRecyclerView() {
         mLayoutManager = new LinearLayoutManager(this);
         binding.recyclerView.setLayoutManager(mLayoutManager);

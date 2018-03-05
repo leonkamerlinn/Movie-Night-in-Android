@@ -1,8 +1,14 @@
 package com.example.leon.movienightinandroid.ui.sortfilter;
 
 import android.app.Activity;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
+import android.support.annotation.Nullable;
 
+import com.example.leon.movienightinandroid.MainActivity;
+import com.example.leon.movienightinandroid.MainViewModel;
+import com.example.leon.movienightinandroid.MainViewModelFactory;
 import com.example.leon.movienightinandroid.R;
 import com.example.leon.movienightinandroid.databinding.ActivitySortFilterBinding;
 import com.example.leon.movienightinandroid.di.scope.ActivityScoped;
@@ -24,9 +30,18 @@ public abstract class SortFilterActivityModule {
 
     @Provides
     @ActivityScoped
-    static ActivitySortFilterBinding provideViewBinding(SortFilterActivity activity) {
+    static ActivitySortFilterBinding provideViewBinding(SortFilterActivity activity, SortFilterViewModel sortFilterViewModel) {
         ActivitySortFilterBinding binding = DataBindingUtil.setContentView(activity, R.layout.activity_sort_filter);
+        binding.setLifecycleOwner(activity);
+        binding.setModel(sortFilterViewModel);
         return binding;
+    }
+
+    @Provides
+    @ActivityScoped
+    static SortFilterViewModel provideSortFilterViewModel(SortFilterActivity activity) {
+        return ViewModelProviders.of(activity).get(SortFilterViewModel.class);
+
     }
 
 

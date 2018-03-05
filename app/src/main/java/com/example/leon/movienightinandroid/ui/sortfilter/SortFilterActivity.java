@@ -32,6 +32,9 @@ public class SortFilterActivity extends DaggerAppCompatActivity implements DateP
     @Inject
     ActivitySortFilterBinding binding;
 
+    @Inject
+    SortFilterViewModel viewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,9 +47,12 @@ public class SortFilterActivity extends DaggerAppCompatActivity implements DateP
             binding.tagLayout.setCheckedGenres(intent.getStringArrayExtra(GENRE_TAGS_EXTRA));
         }
 
-        new DateInputMask(binding.editTextDateFrom);
+
+        new DateInputMask(binding.editTextDateFrom, (text, selection) -> viewModel.dateFromSetText(text, selection));
+        new DateInputMask(binding.editTextDateTo, (text, selection) -> viewModel.dateToSetValue(text, selection));
         binding.bottomLinearLayout.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
         binding.bottomLinearLayout.setFocusableInTouchMode(true);
+
 
 
     }

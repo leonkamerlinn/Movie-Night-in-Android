@@ -31,12 +31,10 @@ public abstract class MainActivityModule {
     @ActivityScoped
     static ActivityMainBinding provideViewBinding(MainActivity activity, MainViewModel viewModel) {
         ActivityMainBinding binding = DataBindingUtil.setContentView(activity, R.layout.activity_main);
-        viewModel.getPageLiveData().isLoading().observe(activity, aBoolean -> {
-            binding.setLoading(aBoolean);
-        });
+        binding.setLifecycleOwner(activity);
+        binding.setModel(viewModel);
 
-        //binding.setLifecycleOwner((LifecycleOwner) activity);
-       // binding.setModel(mainViewModel);
+        viewModel.getPageLiveData().isLoading().observe(activity, binding::setLoading);
         return binding;
     }
 
