@@ -39,8 +39,8 @@ public abstract class SortFilterActivityModule {
 
     @Provides
     @ActivityScoped
-    static SortFilterViewModel provideSortFilterViewModel(SortFilterActivity activity) {
-        return ViewModelProviders.of(activity).get(SortFilterViewModel.class);
+    static SortFilterViewModel provideSortFilterViewModel(SortFilterActivity activity, SortFilterViewModelFactory sortFilterViewModelFactory) {
+        return ViewModelProviders.of(activity, sortFilterViewModelFactory).get(SortFilterViewModel.class);
 
     }
 

@@ -2,6 +2,7 @@ package com.example.leon.movienightinandroid.ui.sortfilter;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import com.example.leon.movienightinandroid.R;
 import com.example.leon.movienightinandroid.databinding.ActivitySortFilterBinding;
 import com.example.leon.movienightinandroid.utils.DateInputMask;
+import com.jakewharton.rxbinding2.widget.RxCompoundButton;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.Calendar;
@@ -27,11 +29,15 @@ import dagger.android.support.DaggerAppCompatActivity;
 
 
 public class SortFilterActivity extends DaggerAppCompatActivity implements DatePickerDialog.OnDateSetListener {
+    public static final String SORT_ITEM_EXTRA = "sort_item_extra";
     public static final String GENRE_TAGS_EXTRA = "genre_tags_extra";
+    public static final String DATE_FROM_EXTRA = "date_from_extra";
+    public static final String DATE_TO_EXTRA = "date_to_extra";
+    public static final String MOVIE_EXTRA = "movie_extra";
+    public static final String VOTES_EXTRA = "votes_extra";
 
     @Inject
     ActivitySortFilterBinding binding;
-
     @Inject
     SortFilterViewModel viewModel;
 
@@ -41,18 +47,48 @@ public class SortFilterActivity extends DaggerAppCompatActivity implements DateP
         setupActionBar();
         populateGenreCheckboxes();
 
-
         Intent intent = getIntent();
+
+        if (intent.hasExtra(SORT_ITEM_EXTRA)) {
+
+        }
+
         if (intent.hasExtra(GENRE_TAGS_EXTRA)) {
             binding.tagLayout.setCheckedGenres(intent.getStringArrayExtra(GENRE_TAGS_EXTRA));
         }
 
+        if (intent.hasExtra(DATE_FROM_EXTRA)) {
 
-        new DateInputMask(binding.editTextDateFrom, (text, selection) -> viewModel.dateFromSetText(text, selection));
-        new DateInputMask(binding.editTextDateTo, (text, selection) -> viewModel.dateToSetValue(text, selection));
+        }
+
+        if (intent.hasExtra(DATE_TO_EXTRA)) {
+
+        }
+
+        if (intent.hasExtra(MOVIE_EXTRA)) {
+
+        }
+
+        if (intent.hasExtra(VOTES_EXTRA)) {
+
+        }
+
+
+        new DateInputMask(binding.editTextDateFrom, (text, selection) -> {
+            binding.editTextDateFrom.setText(text);
+            binding.editTextDateFrom.setSelection(selection);
+        });
+        new DateInputMask(binding.editTextDateTo, (text, selection) -> {
+            binding.editTextDateTo.setText(text);
+            binding.editTextDateTo.setSelection(selection);
+        });
+
+
+
         binding.bottomLinearLayout.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
         binding.bottomLinearLayout.setFocusableInTouchMode(true);
 
+        RxCompoundButton.checkedChanges(binding.movieSwitch).subscribe(viewModel::setMovieSwitchText);
 
 
     }
@@ -107,9 +143,26 @@ public class SortFilterActivity extends DaggerAppCompatActivity implements DateP
         Intent returnIntent = new Intent();
         switch (item.getItemId()) {
             case R.id.menu_item_done:
+
+                String selectedItem = binding.sortSpinner.getSelectedItem().toString();
+                returnIntent.putExtra(SORT_ITEM_EXTRA, selectedItem);
+
                 List<String> values = binding.tagLayout.getCheckedValues();
                 String[] arr = values.toArray(new String[values.size()]);
                 returnIntent.putExtra(GENRE_TAGS_EXTRA, arr);
+
+                String releaseFrom = binding.editTextDateFrom.getText().toString();
+                returnIntent.putExtra(DATE_FROM_EXTRA, releaseFrom);
+
+                String releaseTo = binding.editTextDateTo.getText().toString();
+                returnIntent.putExtra(DATE_TO_EXTRA, releaseTo);
+
+                boolean movie = binding.movieSwitch.isChecked();
+                returnIntent.putExtra(MOVIE_EXTRA, movie);
+
+                String votes = binding.numberOfVotes.getText().toString();
+                returnIntent.putExtra(VOTES_EXTRA, votes);
+
                 setResult(RESULT_OK, returnIntent);
                 finish();
                 break;

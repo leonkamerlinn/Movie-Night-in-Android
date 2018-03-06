@@ -38,11 +38,7 @@
                 app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
         </android.support.design.widget.AppBarLayout>
-    
-    
-    
-    
-    
+
     
         <TextView
             android:id="@+id/sortTextView"
@@ -143,34 +139,41 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tagLayout">
         
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="@string/release_date" />
 
-            <EditText
-                android:id="@+id/editTextDateFrom"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:ems="10"
-                android:inputType="date"
-                android:text="@{model.dateFromLiveData()}"/>
 
-            <EditText
-                android:id="@+id/editTextDateTo"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:ems="10"
-                android:inputType="date"
-                android:text="@{model.dateToLiveData()}"/>
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/editTextDateFrom"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:ems="10"
+                    android:inputType="date"
+                    android:text="@{model.dateFromLiveData()}"/>
+
+                <EditText
+                    android:id="@+id/editTextDateTo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:ems="10"
+                    android:inputType="date"
+                    android:text="@{model.dateToLiveData()}"/>
+            </LinearLayout>
+
 
     
         </LinearLayout>
@@ -210,14 +213,14 @@
     
         </LinearLayout>
     
-    
-    
-       
+
+
+
         <android.support.v7.widget.SwitchCompat
-            android:id="@+id/switchCompat"
+            android:id="@+id/movieSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/switch_movie"
+            android:text="@{model.movieSwitchLiveData()}"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
@@ -227,14 +230,41 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ratingLinearLayout"
             style="@android:style/TextAppearance.Medium"/>
-    
-    
-     
-    
-        
-        
-       
-        
+
+
+        <LinearLayout
+            android:id="@+id/votesLayout"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/movieSwitch">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/votes" />
+
+            <EditText
+                android:id="@+id/numberOfVotes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/movieSwitch"
+                android:inputType="number"
+                android:text="0"/>
+
+        </LinearLayout>
+
 
     </android.support.constraint.ConstraintLayout>
 

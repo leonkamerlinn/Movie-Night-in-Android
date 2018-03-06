@@ -16,8 +16,8 @@ public class DateInputMask implements TextWatcher {
 
     public DateInputMask(EditText editText, DateSelection dateSelection) {
         mEditText = editText;
-        mEditText.addTextChangedListener(this);
         mDateSelection = dateSelection;
+        mEditText.addTextChangedListener(this);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class DateInputMask implements TextWatcher {
             current = clean;
             //mEditText.setText(current);
             //mEditText.setSelection(sel < current.length() ? sel : current.length());
-            mDateSelection.onChange(current, sel);
+            mDateSelection.onChange(current, sel < current.length() ? sel : current.length());
         }
 
     }

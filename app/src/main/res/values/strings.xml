@@ -10,6 +10,7 @@
     <string name="year">Year</string>
     <string name="genre">Genre</string>
     <string name="switch_movie">Movie</string>
+    <string name="switch_tv">Tv</string>
     <string name="tv">tv</string>
     <string name="movie">movie</string>
     <string name="release_date">Release date</string>
@@ -18,9 +19,9 @@
 	<string name="all">all</string>
     <string name="filter">Filter</string>
     <string name="action">action</string>
-    
-    
-    
+    <string name="votes">Votes</string>
+
+
     <string-array name="sort_items">
         <item>popularity</item>
         <item>release date</item>

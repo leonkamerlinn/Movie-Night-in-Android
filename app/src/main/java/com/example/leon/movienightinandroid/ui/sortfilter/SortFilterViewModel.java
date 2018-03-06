@@ -3,6 +3,9 @@ package com.example.leon.movienightinandroid.ui.sortfilter;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.content.Context;
+
+import com.example.leon.movienightinandroid.R;
 
 import java.util.Calendar;
 
@@ -11,14 +14,18 @@ import java.util.Calendar;
  */
 
 public class SortFilterViewModel extends ViewModel {
+    private final Context mContext;
     private MutableLiveData<String> mDateFrom;
     private MutableLiveData<String> mDateTo;
+    private MutableLiveData<String> mMoviSwitch;
 
 
-    public SortFilterViewModel() {
+    public SortFilterViewModel(Context context) {
+        mContext = context;
         mDateFrom = new MutableLiveData<>();
         mDateTo = new MutableLiveData<>();
-;
+        mMoviSwitch = new MutableLiveData<>();
+
 
         Calendar now = Calendar.getInstance();
         Calendar past = Calendar.getInstance();
@@ -44,13 +51,24 @@ public class SortFilterViewModel extends ViewModel {
         return mDateTo;
     }
 
-    public void dateFromSetText(String text, int selection) {
+    public void dateFromSetText(String text) {
         mDateFrom.setValue(text);
 
     }
 
-    public void dateToSetValue(String text, int selection) {
+    public void dateToSetValue(String text) {
         mDateTo.setValue(text);
 
     }
+
+    public void setMovieSwitchText(Boolean checked) {
+
+        mMoviSwitch.setValue(checked ? mContext.getString(R.string.switch_tv) : mContext.getString(R.string.switch_movie));
+    }
+
+    public LiveData<String> movieSwitchLiveData() {
+        return mMoviSwitch;
+    }
+
+
 }
