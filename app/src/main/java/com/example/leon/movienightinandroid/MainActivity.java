@@ -5,6 +5,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -34,7 +35,7 @@ public class MainActivity extends DaggerAppCompatActivity {
     public static final int REQUEST_CODE = 10;
     private SearchView mSearchView;
     private Observable<Boolean> mRadioGroupObservable;
-    private LinearLayoutManager mLayoutManager;
+    private GridLayoutManager mLayoutManager;
     private String mQuery;
     String[] checkedGenres;
     private String mSortSelectedItemExtra;
@@ -65,7 +66,7 @@ public class MainActivity extends DaggerAppCompatActivity {
 
 
     private void setupMovieRecyclerView() {
-        mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager = new GridLayoutManager(this, 2);
         binding.recyclerView.setLayoutManager(mLayoutManager);
         binding.recyclerView.setHasFixedSize(false);
         binding.recyclerView.setAdapter(movieRecyclerViewAdapter);
@@ -226,9 +227,10 @@ public class MainActivity extends DaggerAppCompatActivity {
                 }
 
 
+
+
             } else if (resultCode == Activity.RESULT_CANCELED) {
-                //Write your code if there's no
-                Toast.makeText(this, "canceled", Toast.LENGTH_LONG).show();
+
             }
         }
     }
