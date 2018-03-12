@@ -37,6 +37,13 @@ public class MainActivity extends DaggerAppCompatActivity {
     private LinearLayoutManager mLayoutManager;
     private String mQuery;
     String[] checkedGenres;
+    private String mSortSelectedItemExtra;
+    private String mDateFromExtra;
+    private String mDateToExtra;
+    private boolean mMovieExtra;
+    private int mVotesExtra;
+    private int mResultCode;
+    private float mRatingExtra;
 
     @Inject
     ActivityMainBinding binding;
@@ -46,8 +53,6 @@ public class MainActivity extends DaggerAppCompatActivity {
     TheMovieService.Repository movieRepository;
     @Inject
     MainViewModel viewModel;
-
-
 
 
 
@@ -164,9 +169,18 @@ public class MainActivity extends DaggerAppCompatActivity {
             case R.id.item_sort:
                 //SortFilterDialog.newInstance().show(getSupportFragmentManager(), SortFilterDialog.TAG);
                 Intent intent = new Intent(this, SortFilterActivity.class);
-                if (checkedGenres != null && checkedGenres.length > 0) {
+
+                if (mResultCode == Activity.RESULT_OK) {
+                    intent.putExtra(SortFilterActivity.SORT_ITEM_EXTRA, mSortSelectedItemExtra);
                     intent.putExtra(SortFilterActivity.GENRE_TAGS_EXTRA, checkedGenres);
+                    intent.putExtra(SortFilterActivity.DATE_FROM_EXTRA, mDateFromExtra);
+                    intent.putExtra(SortFilterActivity.DATE_TO_EXTRA, mDateToExtra);
+                    intent.putExtra(SortFilterActivity.MOVIE_EXTRA, mMovieExtra);
+                    intent.putExtra(SortFilterActivity.VOTES_EXTRA, mVotesExtra);
+                    intent.putExtra(SortFilterActivity.RATING_EXTRA, mRatingExtra);
                 }
+
+
                 startActivityForResult(intent, REQUEST_CODE);
                 break;
 
@@ -181,9 +195,34 @@ public class MainActivity extends DaggerAppCompatActivity {
         if (requestCode == REQUEST_CODE) {
             if(resultCode == Activity.RESULT_OK){
 
+                mResultCode = Activity.RESULT_OK;
+                if (data.hasExtra(SortFilterActivity.SORT_ITEM_EXTRA)) {
+                    mSortSelectedItemExtra = data.getStringExtra(SortFilterActivity.SORT_ITEM_EXTRA);
+                }
+
                 if (data.hasExtra(SortFilterActivity.GENRE_TAGS_EXTRA)) {
-                    String[] result = data.getStringArrayExtra(SortFilterActivity.GENRE_TAGS_EXTRA);
-                    checkedGenres = result;
+                    checkedGenres = data.getStringArrayExtra(SortFilterActivity.GENRE_TAGS_EXTRA);
+                }
+
+                if (data.hasExtra(SortFilterActivity.DATE_FROM_EXTRA)) {
+                    mDateFromExtra = data.getStringExtra(SortFilterActivity.DATE_FROM_EXTRA);
+                }
+
+                if (data.hasExtra(SortFilterActivity.DATE_TO_EXTRA)) {
+                    mDateToExtra = data.getStringExtra(SortFilterActivity.DATE_TO_EXTRA);
+                }
+
+                if (data.hasExtra(SortFilterActivity.MOVIE_EXTRA)) {
+                    mMovieExtra = data.getBooleanExtra(SortFilterActivity.MOVIE_EXTRA, true);
+                }
+
+                if (data.hasExtra(SortFilterActivity.VOTES_EXTRA)) {
+                    mVotesExtra = data.getIntExtra(SortFilterActivity.VOTES_EXTRA, 0);
+                }
+
+                if (data.hasExtra(SortFilterActivity.RATING_EXTRA)) {
+                    mRatingExtra = data.getFloatExtra(SortFilterActivity.RATING_EXTRA, 0);
+                    System.out.println(mRatingExtra);
                 }
 
 

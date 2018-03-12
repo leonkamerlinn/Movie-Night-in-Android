@@ -35,6 +35,7 @@ public class SortFilterActivity extends DaggerAppCompatActivity implements DateP
     public static final String DATE_TO_EXTRA = "date_to_extra";
     public static final String MOVIE_EXTRA = "movie_extra";
     public static final String VOTES_EXTRA = "votes_extra";
+    public static final String RATING_EXTRA = "rating_extra";
 
     @Inject
     ActivitySortFilterBinding binding;
@@ -50,7 +51,7 @@ public class SortFilterActivity extends DaggerAppCompatActivity implements DateP
         Intent intent = getIntent();
 
         if (intent.hasExtra(SORT_ITEM_EXTRA)) {
-
+            viewModel.setSortItemExtra(intent.getStringExtra(SORT_ITEM_EXTRA));
         }
 
         if (intent.hasExtra(GENRE_TAGS_EXTRA)) {
@@ -58,19 +59,23 @@ public class SortFilterActivity extends DaggerAppCompatActivity implements DateP
         }
 
         if (intent.hasExtra(DATE_FROM_EXTRA)) {
-
+            viewModel.dateFromSetText(intent.getStringExtra(DATE_FROM_EXTRA));
         }
 
         if (intent.hasExtra(DATE_TO_EXTRA)) {
-
+            viewModel.dateToSetText(intent.getStringExtra(DATE_TO_EXTRA));
         }
 
         if (intent.hasExtra(MOVIE_EXTRA)) {
-
+            viewModel.setMovieSwitchText(intent.getBooleanExtra(MOVIE_EXTRA, false));
         }
 
         if (intent.hasExtra(VOTES_EXTRA)) {
+            viewModel.setVotesExtra(intent.getIntExtra(VOTES_EXTRA, 0));
+        }
 
+        if (intent.hasExtra(RATING_EXTRA)) {
+            viewModel.setRatingExtra(intent.getFloatExtra(RATING_EXTRA, 0));
         }
 
 
@@ -161,7 +166,11 @@ public class SortFilterActivity extends DaggerAppCompatActivity implements DateP
                 returnIntent.putExtra(MOVIE_EXTRA, movie);
 
                 String votes = binding.numberOfVotes.getText().toString();
-                returnIntent.putExtra(VOTES_EXTRA, votes);
+                returnIntent.putExtra(VOTES_EXTRA, Integer.valueOf(votes));
+
+                float rating = binding.ratingBar.getRating();
+                returnIntent.putExtra(RATING_EXTRA, rating);
+                System.out.println(rating);
 
                 setResult(RESULT_OK, returnIntent);
                 finish();

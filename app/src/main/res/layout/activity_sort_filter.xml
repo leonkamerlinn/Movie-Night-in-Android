@@ -81,7 +81,8 @@
                 android:layout_width="0dp"
                 android:layout_weight="2"
                 android:layout_height="wrap_content"
-                android:entries="@array/sort_items" />
+                android:entries="@array/sort_items"
+                android:selectedItemPosition="@{model.itemSelected}"/>
     
         </LinearLayout>
     
@@ -209,6 +210,7 @@
                 android:isIndicator="false"
                 android:layout_marginEnd="16dp"
                 android:numStars="10"
+                android:rating="@{model.rating}"
                 style="?android:attr/ratingBarStyleSmall"/>
     
         </LinearLayout>
@@ -261,7 +263,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/movieSwitch"
                 android:inputType="number"
-                android:text="0"/>
+                android:text="@{model.votes}"/>
 
         </LinearLayout>
 

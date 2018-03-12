@@ -7,6 +7,7 @@ import android.content.Context;
 
 import com.example.leon.movienightinandroid.R;
 
+import java.util.Arrays;
 import java.util.Calendar;
 
 /**
@@ -18,6 +19,10 @@ public class SortFilterViewModel extends ViewModel {
     private MutableLiveData<String> mDateFrom;
     private MutableLiveData<String> mDateTo;
     private MutableLiveData<String> mMoviSwitch;
+    private MutableLiveData<Integer> mSortItemSelected;
+    private MutableLiveData<String> mVotes;
+    private MutableLiveData<Integer> mRating;
+
 
 
     public SortFilterViewModel(Context context) {
@@ -25,6 +30,13 @@ public class SortFilterViewModel extends ViewModel {
         mDateFrom = new MutableLiveData<>();
         mDateTo = new MutableLiveData<>();
         mMoviSwitch = new MutableLiveData<>();
+        mSortItemSelected = new MutableLiveData<>();
+        mSortItemSelected.setValue(0);
+
+        mVotes = new MutableLiveData<>();
+        mVotes.setValue("0");
+
+        mRating = new MutableLiveData<>();
 
 
         Calendar now = Calendar.getInstance();
@@ -56,7 +68,7 @@ public class SortFilterViewModel extends ViewModel {
 
     }
 
-    public void dateToSetValue(String text) {
+    public void dateToSetText(String text) {
         mDateTo.setValue(text);
 
     }
@@ -71,4 +83,31 @@ public class SortFilterViewModel extends ViewModel {
     }
 
 
+    public void setSortItemExtra(String sortItemExtra) {
+        String[] items = mContext.getResources().getStringArray(R.array.sort_items);
+        int position = Arrays.asList(items).indexOf(sortItemExtra);
+        mSortItemSelected.setValue(position);
+
+    }
+
+    public LiveData<Integer> getItemSelected() {
+        return mSortItemSelected;
+    }
+
+    public void setVotesExtra(int votesExtra) {
+        mVotes.setValue(String.valueOf(votesExtra));
+    }
+
+    public LiveData<String> getVotes() {
+        return mVotes;
+    }
+
+    public void setRatingExtra(float ratingExtra) {
+        System.out.println(ratingExtra);
+        mRating.setValue((int) ratingExtra);
+    }
+
+    public LiveData<Integer> getRating() {
+        return mRating;
+    }
 }
