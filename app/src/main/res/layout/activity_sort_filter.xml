@@ -219,6 +219,7 @@
 
 
         <android.support.v7.widget.SwitchCompat
+            android:checked="@{model.isMovieChecked()}"
             android:id="@+id/movieSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

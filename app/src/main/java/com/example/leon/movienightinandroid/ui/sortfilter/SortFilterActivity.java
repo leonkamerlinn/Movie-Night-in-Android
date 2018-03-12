@@ -67,7 +67,10 @@ public class SortFilterActivity extends DaggerAppCompatActivity implements DateP
         }
 
         if (intent.hasExtra(MOVIE_EXTRA)) {
-            viewModel.setMovieSwitchText(intent.getBooleanExtra(MOVIE_EXTRA, false));
+            boolean checked = intent.getBooleanExtra(MOVIE_EXTRA, false);
+            viewModel.setMovieSwitchChecked(checked);
+
+            System.out.println(checked);
         }
 
         if (intent.hasExtra(VOTES_EXTRA)) {
@@ -93,7 +96,9 @@ public class SortFilterActivity extends DaggerAppCompatActivity implements DateP
         binding.bottomLinearLayout.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
         binding.bottomLinearLayout.setFocusableInTouchMode(true);
 
-        RxCompoundButton.checkedChanges(binding.movieSwitch).subscribe(viewModel::setMovieSwitchText);
+        RxCompoundButton.checkedChanges(binding.movieSwitch)
+                .skipInitialValue()
+                .subscribe(viewModel::setMovieSwitchChecked);
 
 
     }
@@ -170,7 +175,7 @@ public class SortFilterActivity extends DaggerAppCompatActivity implements DateP
 
                 float rating = binding.ratingBar.getRating();
                 returnIntent.putExtra(RATING_EXTRA, rating);
-                System.out.println(rating);
+
 
                 setResult(RESULT_OK, returnIntent);
                 finish();

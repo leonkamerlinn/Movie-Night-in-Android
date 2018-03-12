@@ -222,7 +222,7 @@ public class MainActivity extends DaggerAppCompatActivity {
 
                 if (data.hasExtra(SortFilterActivity.RATING_EXTRA)) {
                     mRatingExtra = data.getFloatExtra(SortFilterActivity.RATING_EXTRA, 0);
-                    System.out.println(mRatingExtra);
+
                 }
 
 
@@ -246,7 +246,6 @@ public class MainActivity extends DaggerAppCompatActivity {
         }
 
         @Override
-
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
 

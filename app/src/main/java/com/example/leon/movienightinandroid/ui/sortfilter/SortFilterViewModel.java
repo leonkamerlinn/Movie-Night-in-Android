@@ -1,7 +1,9 @@
 package com.example.leon.movienightinandroid.ui.sortfilter;
 
+import android.arch.core.util.Function;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.content.Context;
 
@@ -18,10 +20,11 @@ public class SortFilterViewModel extends ViewModel {
     private final Context mContext;
     private MutableLiveData<String> mDateFrom;
     private MutableLiveData<String> mDateTo;
-    private MutableLiveData<String> mMoviSwitch;
+
     private MutableLiveData<Integer> mSortItemSelected;
     private MutableLiveData<String> mVotes;
     private MutableLiveData<Integer> mRating;
+    private MutableLiveData<Boolean> mMovieChecked;
 
 
 
@@ -29,7 +32,6 @@ public class SortFilterViewModel extends ViewModel {
         mContext = context;
         mDateFrom = new MutableLiveData<>();
         mDateTo = new MutableLiveData<>();
-        mMoviSwitch = new MutableLiveData<>();
         mSortItemSelected = new MutableLiveData<>();
         mSortItemSelected.setValue(0);
 
@@ -37,6 +39,7 @@ public class SortFilterViewModel extends ViewModel {
         mVotes.setValue("0");
 
         mRating = new MutableLiveData<>();
+        mMovieChecked = new MutableLiveData<>();
 
 
         Calendar now = Calendar.getInstance();
@@ -65,7 +68,6 @@ public class SortFilterViewModel extends ViewModel {
 
     public void dateFromSetText(String text) {
         mDateFrom.setValue(text);
-
     }
 
     public void dateToSetText(String text) {
@@ -73,13 +75,9 @@ public class SortFilterViewModel extends ViewModel {
 
     }
 
-    public void setMovieSwitchText(Boolean checked) {
-
-        mMoviSwitch.setValue(checked ? mContext.getString(R.string.switch_tv) : mContext.getString(R.string.switch_movie));
-    }
 
     public LiveData<String> movieSwitchLiveData() {
-        return mMoviSwitch;
+        return Transformations.map(mMovieChecked, checked -> checked ? mContext.getString(R.string.switch_tv) : mContext.getString(R.string.switch_movie));
     }
 
 
@@ -103,11 +101,19 @@ public class SortFilterViewModel extends ViewModel {
     }
 
     public void setRatingExtra(float ratingExtra) {
-        System.out.println(ratingExtra);
+
         mRating.setValue((int) ratingExtra);
     }
 
     public LiveData<Integer> getRating() {
         return mRating;
+    }
+
+    public void setMovieSwitchChecked(boolean movieSwitchChecked) {
+        mMovieChecked.setValue(movieSwitchChecked);
+    }
+
+    public LiveData<Boolean> isMovieChecked() {
+        return mMovieChecked;
     }
 }
