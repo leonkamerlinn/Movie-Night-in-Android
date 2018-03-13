@@ -5,5 +5,6 @@ public enum SearchFilter {
     SEARCH_MOVIES,
     SEARCH_TV,
     DISCOVER_MOVIES,
-    DISCOVER_TV
+    DISCOVER_TV,
+    FILTER
 }

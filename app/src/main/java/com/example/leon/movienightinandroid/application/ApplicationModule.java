@@ -23,36 +23,58 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public abstract class ApplicationModule {
+    private static TheMovieService.Repository mMovieService;
+    private static OkHttpClient okk;
+
     @Binds
     abstract Context bindContext(Application application);
 
     @Provides
     static OkHttpClient provideOkHttpClient() {
-        return new OkHttpClient.Builder()
+        okk = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
                     Request original = chain.request();
                     HttpUrl httpUrl = original.url();
 
+
+
                     HttpUrl newHttpUrl = httpUrl.newBuilder().addQueryParameter(TheMovieService.API_KEY_QUERY, BuildConfig.API_KEY).build();
+
+                    System.out.println(newHttpUrl.toString());
+
                     Request.Builder requestBuilder = original.newBuilder().url(newHttpUrl);
                     Request request = requestBuilder.build();
 
+
+
+
                     return chain.proceed(request);
                 }).build();
+
+
+
+        return okk;
     }
 
     @Provides
     static Retrofit provideRetrofit(OkHttpClient okHttpClient) {
-        return new Retrofit.Builder()
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(TheMovieService.BASE_URL)
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
+
+        return retrofit;
     }
 
     @Provides
     static TheMovieService.Repository provideMovieService(Retrofit retrofit) {
-        return retrofit.create(TheMovieService.Repository.class);
+        if (mMovieService == null) {
+            mMovieService = retrofit.create(TheMovieService.Repository.class);
+        }
+
+
+        return mMovieService;
     }
 }

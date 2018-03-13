@@ -7,7 +7,9 @@ import com.example.leon.movienightinandroid.api.moviedb.model.Movie;
 import com.example.leon.movienightinandroid.api.moviedb.model.Page;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -24,24 +26,24 @@ public class PageLiveData extends LiveData<Page> implements Observer<Page> {
     private SearchFilter mMode;
     private Page mLastPage;
     private final List<Movie> mMovies;
-
-
+    private boolean ml;
 
 
     public PageLiveData(TheMovieService.Repository movieService) {
+        ml = true;
         mMovies = new ArrayList<>();
         mLoading = new MutableLiveData<>();
         setLoading(true);
-
-        Observable<Page> one = movieService.discoverMovies(1)
+        Map<String, Object> objectMap = new HashMap<>();
+        Observable<Page> one = movieService.discoverMovies(1, objectMap)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
-        Observable<Page> two = movieService.discoverMovies(2)
+        Observable<Page> two = movieService.discoverMovies(2, objectMap)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
-        Observable<Page> three = movieService.discoverMovies(3)
+        Observable<Page> three = movieService.discoverMovies(3, objectMap)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
@@ -54,6 +56,10 @@ public class PageLiveData extends LiveData<Page> implements Observer<Page> {
 
     public List<Movie> getMovies() {
         return mMovies;
+    }
+
+    public void clear() {
+        mMovies.clear();
     }
 
     private void addPage(Page page) {
@@ -75,6 +81,11 @@ public class PageLiveData extends LiveData<Page> implements Observer<Page> {
 
     @Override
     public void onSubscribe(Disposable d) {
+        ml = true;
+    }
+
+    public boolean loading() {
+        return ml;
     }
 
     @Override
@@ -91,6 +102,8 @@ public class PageLiveData extends LiveData<Page> implements Observer<Page> {
     @Override
     public void onComplete() {
         setLoading(false);
+        ml = false;
+        System.out.println("onComplete");
     }
 
 

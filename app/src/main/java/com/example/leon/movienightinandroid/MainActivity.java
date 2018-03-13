@@ -5,33 +5,41 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
 
 import com.example.leon.movienightinandroid.api.moviedb.MovieRecyclerViewAdapter;
 import com.example.leon.movienightinandroid.api.moviedb.SearchFilter;
 import com.example.leon.movienightinandroid.api.moviedb.TheMovieService;
+import com.example.leon.movienightinandroid.api.moviedb.model.Movie;
+import com.example.leon.movienightinandroid.api.moviedb.model.Page;
 import com.example.leon.movienightinandroid.databinding.ActivityMainBinding;
+import com.example.leon.movienightinandroid.dialog.MovieDialog;
 import com.example.leon.movienightinandroid.ui.sortfilter.SortFilterActivity;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding2.support.v7.widget.SearchViewQueryTextEvent;
 import com.jakewharton.rxbinding2.widget.RxCompoundButton;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerAppCompatActivity;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
 
-public class MainActivity extends DaggerAppCompatActivity {
+public class MainActivity extends DaggerAppCompatActivity implements MovieRecyclerViewAdapter.MovieListener {
     public static final int REQUEST_CODE = 10;
     private SearchView mSearchView;
     private Observable<Boolean> mRadioGroupObservable;
@@ -54,7 +62,7 @@ public class MainActivity extends DaggerAppCompatActivity {
     TheMovieService.Repository movieRepository;
     @Inject
     MainViewModel viewModel;
-
+    private HashMap<String, Object> mQueryMap;
 
 
     @Override
@@ -62,6 +70,9 @@ public class MainActivity extends DaggerAppCompatActivity {
         super.onCreate(savedInstanceState);
         setSupportActionBar(binding.toolbar);
         setupMovieRecyclerView();
+        movieRecyclerViewAdapter.setItemListener(this);
+
+        mQueryMap = new HashMap<>();
     }
 
 
@@ -225,9 +236,16 @@ public class MainActivity extends DaggerAppCompatActivity {
                     mRatingExtra = data.getFloatExtra(SortFilterActivity.RATING_EXTRA, 0);
 
                 }
+                mQueryMap.put(TheMovieService.SORT_BY_QUERY, TheMovieService.SORT_BY_VOTE_COUNT_ASC);
+
+                movieRecyclerViewAdapter.clear();
 
 
-
+                viewModel.getPageLiveData().setMode(SearchFilter.FILTER);
+                movieRepository.discoverMovies(1, mQueryMap)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(viewModel.getPageLiveData());
 
             } else if (resultCode == Activity.RESULT_CANCELED) {
 
@@ -235,6 +253,14 @@ public class MainActivity extends DaggerAppCompatActivity {
         }
     }
 
+    @Override
+    public void onItemClick(View view, int position) {
+        Movie movie = viewModel.getPageLiveData().getMovies().get(position);
+        MovieDialog movieDialog = MovieDialog.newInstance(movie);
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        movieDialog.show(ft, MovieDialog.TAG);
+    }
 
 
     private class RecyclerViewScroller extends RecyclerView.OnScrollListener {
@@ -256,20 +282,24 @@ public class MainActivity extends DaggerAppCompatActivity {
             int totalItemCount = mLayoutManager.getItemCount();
             //adapter position of the first visible view.
             int lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
-            int visibleThreshold = 20;
+            int visibleThreshold = 10;
 
             if (!viewModel.getPageLiveData().isLoading().getValue() && totalItemCount <= lastVisibleItem + visibleThreshold) {
                 //movieRecyclerViewAdapter.loadNextPage();
 
                 switch (viewModel.getPageLiveData().getFilter()) {
                     case DISCOVER_MOVIES:
-                        movieRepository.discoverMovies(viewModel.getPageLiveData().getNextPage())
+                        movieRepository.discoverMovies(viewModel.getPageLiveData().getNextPage(), mQueryMap)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(viewModel.getPageLiveData());
                         break;
 
                     case DISCOVER_TV:
+                        movieRepository.discoverTv(viewModel.getPageLiveData().getNextPage(), mQueryMap)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(viewModel.getPageLiveData());
                         break;
 
                     case SEARCH_MOVIES:
@@ -288,6 +318,16 @@ public class MainActivity extends DaggerAppCompatActivity {
 
                     case SEARCH_ALL:
                         movieRepository.searchMulti(mQuery)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(viewModel.getPageLiveData());
+                        break;
+
+                    case FILTER:
+                        System.out.println("sdf");
+                        movieRepository.discoverMovies(viewModel.getPageLiveData().getNextPage(), mQueryMap)
+                                //.skipWhile(page -> viewModel.getPageLiveData().loading())
+                                .delay(10, TimeUnit.SECONDS)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(viewModel.getPageLiveData());

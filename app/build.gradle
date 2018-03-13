@@ -49,8 +49,6 @@ android {
         }
     }
 
-
-
     buildTypes.each {
         it.buildConfigField 'String', 'MESSAGE', properties['message']
         it.buildConfigField 'String', 'API_KEY', properties['API_KEY']

@@ -5,6 +5,7 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
@@ -23,21 +24,29 @@ import javax.inject.Inject;
  * Created by Leon on 2/4/2018.
  */
 
-public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecyclerViewAdapter.MovieViewHolder> {
+public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecyclerViewAdapter.MovieViewHolder>{
 
     private final MainViewModel mViewModel;
+    private final Activity mActivity;
+    private MovieListener mMovieListener;
+
 
     @Inject
     public MovieRecyclerViewAdapter(MainViewModel viewModel, Activity activity) {
         viewModel.getPageLiveData().observe((LifecycleOwner) activity, this::notifyPage);
         mViewModel = viewModel;
+        mActivity = activity;
     }
+
+
+
+
 
     @Override
     public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ItemMovieBinding itemMovieBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.item_movie, parent, false);
 
-        return new MovieViewHolder(itemMovieBinding);
+        return new MovieViewHolder(itemMovieBinding, this);
     }
 
     @Override
@@ -74,18 +83,39 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
         notifyItemRangeInserted(mViewModel.getPageLiveData().getMovies().size() - 1, page.results.size());
     }
 
-    public static class MovieViewHolder extends RecyclerView.ViewHolder {
-
-        private final ItemMovieBinding binding;
-
-        public MovieViewHolder(ItemMovieBinding itemMovieBinding) {
-            super(itemMovieBinding.getRoot());
-            binding = itemMovieBinding;
-        }
+    public void setItemListener(MovieListener movieListener) {
+        mMovieListener = movieListener;
     }
 
 
 
 
+    public static class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        private final ItemMovieBinding binding;
+        private final MovieRecyclerViewAdapter adapter;
+
+
+        public MovieViewHolder(ItemMovieBinding itemMovieBinding, MovieRecyclerViewAdapter movieRecyclerViewAdapter) {
+            super(itemMovieBinding.getRoot());
+            binding = itemMovieBinding;
+            binding.getRoot().setOnClickListener(this);
+            adapter = movieRecyclerViewAdapter;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (adapter.mMovieListener != null) {
+                adapter.mMovieListener.onItemClick(v, getAdapterPosition());
+            }
+        }
+    }
+
+    public interface MovieListener {
+        void onItemClick(View view, int position);
+
+    }
 
 }
+
+
