@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.example.leon.movienightinandroid.MainViewModel;
 import com.example.leon.movienightinandroid.R;
 import com.example.leon.movienightinandroid.api.moviedb.model.Movie;
@@ -42,11 +43,18 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
         ItemMovieBinding binding = holder.binding;
-
         List<Movie> movies = new ArrayList<>(mViewModel.getPageLiveData().getMovies());
-        String title = movies.get(position).original_title;
-        String name = movies.get(position).original_name;
+        Movie movie = movies.get(position);
+
+
+        String title = movie.original_title;
+        String name = movie.original_name;
         binding.sortTextView.setText((title == null) ? name : title);
+        String imageUrl = TheMovieService.IMAGE_URL + movie.poster_path;
+        Glide.with(binding.getRoot().getContext())
+                .load(imageUrl)
+                .into(binding.imageView);
+
     }
 
     @Override

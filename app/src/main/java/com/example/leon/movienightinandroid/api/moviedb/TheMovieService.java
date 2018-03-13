@@ -17,7 +17,7 @@ import retrofit2.http.QueryMap;
 
 public class TheMovieService {
     public static final String BASE_URL = "https://api.themoviedb.org/3/";
-
+    public static final String IMAGE_URL = "https://image.tmdb.org/t/p/w185_and_h278_bestv2";
 
     //queries
     public static final String API_KEY_QUERY = "api_key";
