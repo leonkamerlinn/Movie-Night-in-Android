@@ -26,11 +26,13 @@ public class PageLiveData extends LiveData<Page> implements Observer<Page> {
     private SearchFilter mMode;
     private Page mLastPage;
     private final List<Movie> mMovies;
-    private boolean ml;
+    private int currNumPage = 0;
+
+
 
 
     public PageLiveData(TheMovieService.Repository movieService) {
-        ml = true;
+
         mMovies = new ArrayList<>();
         mLoading = new MutableLiveData<>();
         setLoading(true);
@@ -59,7 +61,9 @@ public class PageLiveData extends LiveData<Page> implements Observer<Page> {
     }
 
     public void clear() {
+        currNumPage = 0;
         mMovies.clear();
+
     }
 
     private void addPage(Page page) {
@@ -75,23 +79,24 @@ public class PageLiveData extends LiveData<Page> implements Observer<Page> {
     }
 
     public int getNextPage() {
-        return mLastPage.page + 1;
+        currNumPage++;
+        return currNumPage;
     }
+
 
 
     @Override
     public void onSubscribe(Disposable d) {
-        ml = true;
+        System.out.println("subscribe");
     }
 
-    public boolean loading() {
-        return ml;
-    }
+
 
     @Override
     public void onNext(Page page) {
         addPage(page);
         setValue(page);
+        System.out.println("next");
     }
 
     @Override
@@ -101,9 +106,8 @@ public class PageLiveData extends LiveData<Page> implements Observer<Page> {
 
     @Override
     public void onComplete() {
+        System.out.println("complete");
         setLoading(false);
-        ml = false;
-        System.out.println("onComplete");
     }
 
 

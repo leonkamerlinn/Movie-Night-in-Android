@@ -239,10 +239,11 @@ public class MainActivity extends DaggerAppCompatActivity implements MovieRecycl
                 mQueryMap.put(TheMovieService.SORT_BY_QUERY, TheMovieService.SORT_BY_VOTE_COUNT_ASC);
 
                 movieRecyclerViewAdapter.clear();
+                viewModel.getPageLiveData().clear();
 
 
                 viewModel.getPageLiveData().setMode(SearchFilter.FILTER);
-                movieRepository.discoverMovies(1, mQueryMap)
+                movieRepository.discoverMovies(viewModel.getPageLiveData().getNextPage(), mQueryMap)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(viewModel.getPageLiveData());
@@ -290,9 +291,9 @@ public class MainActivity extends DaggerAppCompatActivity implements MovieRecycl
                 switch (viewModel.getPageLiveData().getFilter()) {
                     case DISCOVER_MOVIES:
                         movieRepository.discoverMovies(viewModel.getPageLiveData().getNextPage(), mQueryMap)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(viewModel.getPageLiveData());
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(viewModel.getPageLiveData());
                         break;
 
                     case DISCOVER_TV:
@@ -326,8 +327,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MovieRecycl
                     case FILTER:
                         System.out.println("sdf");
                         movieRepository.discoverMovies(viewModel.getPageLiveData().getNextPage(), mQueryMap)
-                                //.skipWhile(page -> viewModel.getPageLiveData().loading())
-                                .delay(10, TimeUnit.SECONDS)
+                                .skipWhile(page -> true)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(viewModel.getPageLiveData());
