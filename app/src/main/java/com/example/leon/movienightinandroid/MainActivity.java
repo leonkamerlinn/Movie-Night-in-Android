@@ -44,7 +44,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MovieRecycl
     private SearchView mSearchView;
     private Observable<Boolean> mRadioGroupObservable;
     private GridLayoutManager mLayoutManager;
-    private String mQuery;
+    private String mQuery = "";
     String[] checkedGenres;
     private String mSortSelectedItemExtra;
     private String mDateFromExtra;
@@ -288,6 +288,8 @@ public class MainActivity extends DaggerAppCompatActivity implements MovieRecycl
             if (!viewModel.getPageLiveData().isLoading().getValue() && totalItemCount <= lastVisibleItem + visibleThreshold) {
                 //movieRecyclerViewAdapter.loadNextPage();
 
+                viewModel.getPageLiveData().mSubject.onNext(mQuery);
+
                 switch (viewModel.getPageLiveData().getFilter()) {
                     case DISCOVER_MOVIES:
                         movieRepository.discoverMovies(viewModel.getPageLiveData().getNextPage(), mQueryMap)
@@ -327,7 +329,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MovieRecycl
                     case FILTER:
                         System.out.println("sdf");
                         movieRepository.discoverMovies(viewModel.getPageLiveData().getNextPage(), mQueryMap)
-                                .skipWhile(page -> true)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(viewModel.getPageLiveData());

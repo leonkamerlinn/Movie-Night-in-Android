@@ -15,7 +15,9 @@ import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by Leon on 2/24/2018.
@@ -29,7 +31,13 @@ public class PageLiveData extends LiveData<Page> implements Observer<Page> {
     private int currNumPage = 0;
 
 
+    public PublishSubject<String> mSubject = PublishSubject.create();
 
+
+
+    public Observable<String> getScroller() {
+        return mSubject;
+    }
 
     public PageLiveData(TheMovieService.Repository movieService) {
 
@@ -54,6 +62,10 @@ public class PageLiveData extends LiveData<Page> implements Observer<Page> {
 
 
         setMode(SearchFilter.DISCOVER_MOVIES);
+        getScroller()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(System.out::println);
     }
 
     public List<Movie> getMovies() {
@@ -87,7 +99,6 @@ public class PageLiveData extends LiveData<Page> implements Observer<Page> {
 
     @Override
     public void onSubscribe(Disposable d) {
-        System.out.println("subscribe");
     }
 
 
@@ -96,7 +107,6 @@ public class PageLiveData extends LiveData<Page> implements Observer<Page> {
     public void onNext(Page page) {
         addPage(page);
         setValue(page);
-        System.out.println("next");
     }
 
     @Override
@@ -106,7 +116,6 @@ public class PageLiveData extends LiveData<Page> implements Observer<Page> {
 
     @Override
     public void onComplete() {
-        System.out.println("complete");
         setLoading(false);
     }
 
