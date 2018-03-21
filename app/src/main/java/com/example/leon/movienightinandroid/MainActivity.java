@@ -17,8 +17,8 @@ import android.view.View;
 import com.example.leon.movienightinandroid.api.moviedb.MovieRecyclerViewAdapter;
 import com.example.leon.movienightinandroid.api.moviedb.SearchFilter;
 import com.example.leon.movienightinandroid.api.moviedb.TheMovieService;
+import com.example.leon.movienightinandroid.api.moviedb.model.Filter;
 import com.example.leon.movienightinandroid.api.moviedb.model.Movie;
-import com.example.leon.movienightinandroid.api.moviedb.model.Page;
 import com.example.leon.movienightinandroid.databinding.ActivityMainBinding;
 import com.example.leon.movienightinandroid.dialog.MovieDialog;
 import com.example.leon.movienightinandroid.ui.sortfilter.SortFilterActivity;
@@ -27,15 +27,12 @@ import com.jakewharton.rxbinding2.support.v7.widget.SearchViewQueryTextEvent;
 import com.jakewharton.rxbinding2.widget.RxCompoundButton;
 
 import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerAppCompatActivity;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -71,7 +68,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MovieRecycl
         setSupportActionBar(binding.toolbar);
         setupMovieRecyclerView();
         movieRecyclerViewAdapter.setItemListener(this);
-
         mQueryMap = new HashMap<>();
     }
 
@@ -207,6 +203,9 @@ public class MainActivity extends DaggerAppCompatActivity implements MovieRecycl
         if (requestCode == REQUEST_CODE) {
             if(resultCode == Activity.RESULT_OK){
 
+
+
+
                 mResultCode = Activity.RESULT_OK;
                 if (data.hasExtra(SortFilterActivity.SORT_ITEM_EXTRA)) {
                     mSortSelectedItemExtra = data.getStringExtra(SortFilterActivity.SORT_ITEM_EXTRA);
@@ -234,7 +233,11 @@ public class MainActivity extends DaggerAppCompatActivity implements MovieRecycl
 
                 if (data.hasExtra(SortFilterActivity.RATING_EXTRA)) {
                     mRatingExtra = data.getFloatExtra(SortFilterActivity.RATING_EXTRA, 0);
+                }
 
+                if (data.hasExtra(SortFilterActivity.FILTER_EXTRA)) {
+                    Filter filter = data.getParcelableExtra(SortFilterActivity.FILTER_EXTRA);
+                    System.out.println(filter.toString());
                 }
                 mQueryMap.put(TheMovieService.SORT_BY_QUERY, TheMovieService.SORT_BY_VOTE_COUNT_ASC);
 
@@ -288,9 +291,9 @@ public class MainActivity extends DaggerAppCompatActivity implements MovieRecycl
             if (!viewModel.getPageLiveData().isLoading().getValue() && totalItemCount <= lastVisibleItem + visibleThreshold) {
                 //movieRecyclerViewAdapter.loadNextPage();
 
-                viewModel.getPageLiveData().mSubject.onNext(mQuery);
+                viewModel.getPageLiveData().scrollerSubject.onNext(mQuery);
 
-                switch (viewModel.getPageLiveData().getFilter()) {
+                switch (viewModel.getPageLiveData().getMode()) {
                     case DISCOVER_MOVIES:
                         movieRepository.discoverMovies(viewModel.getPageLiveData().getNextPage(), mQueryMap)
                                 .subscribeOn(Schedulers.io())

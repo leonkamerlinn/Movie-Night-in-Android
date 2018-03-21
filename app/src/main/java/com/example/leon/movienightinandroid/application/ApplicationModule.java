@@ -5,7 +5,6 @@ import android.content.Context;
 
 import com.example.leon.movienightinandroid.BuildConfig;
 import com.example.leon.movienightinandroid.api.moviedb.TheMovieService;
-import com.example.leon.movienightinandroid.di.qualifier.ApplicationContext;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import dagger.Binds;
@@ -35,8 +34,6 @@ public abstract class ApplicationModule {
                 .addInterceptor(chain -> {
                     Request original = chain.request();
                     HttpUrl httpUrl = original.url();
-
-
 
                     HttpUrl newHttpUrl = httpUrl.newBuilder().addQueryParameter(TheMovieService.API_KEY_QUERY, BuildConfig.API_KEY).build();
 

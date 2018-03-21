@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.leon.movienightinandroid.R;
+import com.example.leon.movienightinandroid.api.moviedb.model.Filter;
 import com.example.leon.movienightinandroid.databinding.ActivitySortFilterBinding;
 import com.example.leon.movienightinandroid.utils.DateInputMask;
 import com.jakewharton.rxbinding2.widget.RxCompoundButton;
@@ -36,6 +37,7 @@ public class SortFilterActivity extends DaggerAppCompatActivity implements DateP
     public static final String MOVIE_EXTRA = "movie_extra";
     public static final String VOTES_EXTRA = "votes_extra";
     public static final String RATING_EXTRA = "rating_extra";
+    public static final String FILTER_EXTRA = "filter_extra";
 
     @Inject
     ActivitySortFilterBinding binding;
@@ -154,6 +156,9 @@ public class SortFilterActivity extends DaggerAppCompatActivity implements DateP
         switch (item.getItemId()) {
             case R.id.menu_item_done:
 
+
+
+
                 String selectedItem = binding.sortSpinner.getSelectedItem().toString();
                 returnIntent.putExtra(SORT_ITEM_EXTRA, selectedItem);
 
@@ -176,7 +181,8 @@ public class SortFilterActivity extends DaggerAppCompatActivity implements DateP
                 float rating = binding.ratingBar.getRating();
                 returnIntent.putExtra(RATING_EXTRA, rating);
 
-
+                Filter filter = new Filter(selectedItem, arr, releaseFrom, releaseTo, movie, Integer.valueOf(votes), (int) rating);
+                returnIntent.putExtra(FILTER_EXTRA, filter);
                 setResult(RESULT_OK, returnIntent);
                 finish();
                 break;

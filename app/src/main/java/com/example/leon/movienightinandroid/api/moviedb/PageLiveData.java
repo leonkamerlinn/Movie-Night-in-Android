@@ -3,6 +3,7 @@ package com.example.leon.movienightinandroid.api.moviedb;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 
+import com.example.leon.movienightinandroid.api.moviedb.model.Filter;
 import com.example.leon.movienightinandroid.api.moviedb.model.Movie;
 import com.example.leon.movienightinandroid.api.moviedb.model.Page;
 
@@ -15,7 +16,6 @@ import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
@@ -31,12 +31,15 @@ public class PageLiveData extends LiveData<Page> implements Observer<Page> {
     private int currNumPage = 0;
 
 
-    public PublishSubject<String> mSubject = PublishSubject.create();
-
+    public PublishSubject<String> scrollerSubject = PublishSubject.create();
+    public PublishSubject<Filter> filterSubject = PublishSubject.create();
 
 
     public Observable<String> getScroller() {
-        return mSubject;
+        return scrollerSubject;
+    }
+    public Observable<Filter> getFilter() {
+        return filterSubject;
     }
 
     public PageLiveData(TheMovieService.Repository movieService) {
@@ -62,10 +65,6 @@ public class PageLiveData extends LiveData<Page> implements Observer<Page> {
 
 
         setMode(SearchFilter.DISCOVER_MOVIES);
-        getScroller()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(System.out::println);
     }
 
     public List<Movie> getMovies() {
@@ -124,7 +123,7 @@ public class PageLiveData extends LiveData<Page> implements Observer<Page> {
         mMode = mode;
     }
 
-    public SearchFilter getFilter() {
+    public SearchFilter getMode() {
         return mMode;
     }
 

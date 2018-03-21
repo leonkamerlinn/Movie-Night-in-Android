@@ -1,14 +1,21 @@
 package com.example.leon.movienightinandroid.api.moviedb.model;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.ViewModel;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by Leon on 2/4/2018.
  */
 
-public class Movie implements Comparable<Movie>, Parcelable {
+public class Movie extends LiveData<Movie> implements Comparable<Movie>, Parcelable {
     public int vote_count;
     public int id;
     public boolean video;
@@ -25,6 +32,14 @@ public class Movie implements Comparable<Movie>, Parcelable {
     public String release_date;
     public String original_name;
     public String name;
+
+    public Movie() {
+
+    }
+
+
+
+
 
     public Movie(Parcel in) {
         vote_count = in.readInt();
@@ -92,4 +107,10 @@ public class Movie implements Comparable<Movie>, Parcelable {
     public String toString() {
         return String.format("%s, %s, %s", title, poster_path, release_date);
     }
+
+    @Override
+    protected void onActive() {
+        setValue(this);
+    }
+
 }

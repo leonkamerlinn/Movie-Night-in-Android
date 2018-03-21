@@ -217,9 +217,9 @@ public class TagLayout extends LinearLayout {
         int sumWidth = 0;
         int maxChildHeight = 0;
 
-        /*int widthMode = MeasureSpec.getFilter(widthMeasureSpec);
+        /*int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-        int heightMode = MeasureSpec.getFilter(heightMeasureSpec);
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 
         //Measure Width
