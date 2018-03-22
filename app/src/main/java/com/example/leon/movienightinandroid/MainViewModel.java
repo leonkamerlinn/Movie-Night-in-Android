@@ -5,7 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.content.Context;
 
-import com.example.leon.movienightinandroid.api.moviedb.PageLiveData;
+import com.example.leon.movienightinandroid.api.moviedb.PageRepository;
 import com.example.leon.movienightinandroid.api.moviedb.TheMovieService;
 
 /**
@@ -13,11 +13,11 @@ import com.example.leon.movienightinandroid.api.moviedb.TheMovieService;
  */
 
 public class MainViewModel extends ViewModel {
-    private PageLiveData mPageLiveData;
+    private PageRepository mPageLiveData;
     private final MutableLiveData<String> mTitle;
 
     public MainViewModel(Context context, TheMovieService.Repository movieService) {
-        mPageLiveData = new PageLiveData(movieService);
+        mPageLiveData = new PageRepository(movieService);
         mTitle = new MutableLiveData<>();
         setTitle(context.getResources().getString(R.string.app_name));
     }
@@ -31,7 +31,7 @@ public class MainViewModel extends ViewModel {
     }
 
 
-    public PageLiveData getPageLiveData() {
+    public PageRepository getPageLiveData() {
         return mPageLiveData;
     }
 

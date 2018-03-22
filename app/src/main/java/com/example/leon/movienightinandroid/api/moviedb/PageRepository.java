@@ -23,7 +23,7 @@ import io.reactivex.subjects.PublishSubject;
  * Created by Leon on 2/24/2018.
  */
 
-public class PageLiveData extends LiveData<Page> implements Observer<Page> {
+public class PageRepository implements Observer<Page> {
     private final MutableLiveData<Boolean> mLoading;
     private SearchFilter mMode;
     private Page mLastPage;
@@ -42,7 +42,7 @@ public class PageLiveData extends LiveData<Page> implements Observer<Page> {
         return filterSubject;
     }
 
-    public PageLiveData(TheMovieService.Repository movieService) {
+    public PageRepository(TheMovieService.Repository movieService) {
 
         mMovies = new ArrayList<>();
         mLoading = new MutableLiveData<>();
@@ -105,7 +105,6 @@ public class PageLiveData extends LiveData<Page> implements Observer<Page> {
     @Override
     public void onNext(Page page) {
         addPage(page);
-        setValue(page);
     }
 
     @Override

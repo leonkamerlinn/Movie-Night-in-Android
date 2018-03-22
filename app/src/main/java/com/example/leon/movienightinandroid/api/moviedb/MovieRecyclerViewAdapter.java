@@ -33,7 +33,6 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
 
     @Inject
     public MovieRecyclerViewAdapter(MainViewModel viewModel, Activity activity) {
-        viewModel.getPageLiveData().observe((LifecycleOwner) activity, this::notifyPage);
         mViewModel = viewModel;
         mActivity = activity;
     }
