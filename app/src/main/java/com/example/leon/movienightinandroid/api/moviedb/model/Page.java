@@ -11,4 +11,18 @@ public class Page {
     public int total_results;
     public int total_pages;
     public List<Movie> results;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Page) {
+            Page other = (Page)obj;
+            return (page == other.page);
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Page: %s", page);
+    }
 }

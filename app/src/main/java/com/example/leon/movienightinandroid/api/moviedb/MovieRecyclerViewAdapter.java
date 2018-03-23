@@ -21,13 +21,11 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Leon on 2/4/2018.
  */
-
 public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecyclerViewAdapter.MovieViewHolder>{
 
     private final MainViewModel mViewModel;
@@ -46,7 +44,7 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(repository -> {
-                    mMovies.addAll(repository.getLastPage().results);
+                    mMovies.addAll(repository.getCurrentPage().results);
                     notifyDataSetChanged();
                 });
     }

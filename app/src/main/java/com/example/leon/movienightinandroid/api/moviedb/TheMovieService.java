@@ -78,7 +78,7 @@ public class TheMovieService {
 
 
         @GET(TheMovieService.DISCOVER_TV_PATH)
-        Observable<Page> discoverTv(@Query(TheMovieService.PAGE_QUERY) int page, @QueryMap Map<String, Object> map);
+        Single<Page> discoverTv(@Query(TheMovieService.PAGE_QUERY) int page, @QueryMap Map<String, Object> map);
 
         @GET(TheMovieService.DISCOVER_TV_PATH)
         Observable<Page> discoverTv(@Query(TheMovieService.PAGE_QUERY) int page);
@@ -87,13 +87,22 @@ public class TheMovieService {
         Observable<List<Genre>> genres();
 
         @GET(TheMovieService.SEARCH_MOVIE_PATH)
-        Observable<Page> searchMovie(@Query(TheMovieService.SEARCH_QUERY) String query);
+        Single<Page> searchMovie(@Query(TheMovieService.SEARCH_QUERY) String query);
+
+        @GET(TheMovieService.SEARCH_MOVIE_PATH)
+        Single<Page> searchMovie(@Query(TheMovieService.PAGE_QUERY) int page, @QueryMap Map<String, Object> map);
 
         @GET(TheMovieService.SEARCH_TV_PATH)
-        Observable<Page> searchTv(@Query(TheMovieService.SEARCH_QUERY) String query);
+        Single<Page> searchTv(@Query(TheMovieService.SEARCH_QUERY) String query);
+
+        @GET(TheMovieService.SEARCH_TV_PATH)
+        Single<Page> searchTv(@Query(TheMovieService.PAGE_QUERY) int page, @QueryMap Map<String, Object> map);
 
         @GET(TheMovieService.SEARCH_MULTI_PATH)
-        Observable<Page> searchMulti(@Query(TheMovieService.SEARCH_QUERY) String query);
+        Single<Page> searchMulti(@Query(TheMovieService.SEARCH_QUERY) String query);
+
+        @GET(TheMovieService.SEARCH_MULTI_PATH)
+        Single<Page> searchMulti(@Query(TheMovieService.PAGE_QUERY) int page, @QueryMap Map<String, Object> map);
     }
 
     /*

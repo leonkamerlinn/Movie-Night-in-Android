@@ -37,7 +37,7 @@ public abstract class ApplicationModule {
 
                     HttpUrl newHttpUrl = httpUrl.newBuilder().addQueryParameter(TheMovieService.API_KEY_QUERY, BuildConfig.API_KEY).build();
 
-                    System.out.println(newHttpUrl.toString());
+                    //System.out.println(newHttpUrl.toString());
 
                     Request.Builder requestBuilder = original.newBuilder().url(newHttpUrl);
                     Request request = requestBuilder.build();
