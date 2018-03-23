@@ -13,11 +13,9 @@ import com.example.leon.movienightinandroid.api.moviedb.TheMovieService;
  */
 
 public class MainViewModel extends ViewModel {
-    private PageRepository mPageLiveData;
     private final MutableLiveData<String> mTitle;
 
-    public MainViewModel(Context context, TheMovieService.Repository movieService) {
-        mPageLiveData = new PageRepository(movieService);
+    public MainViewModel(Context context) {
         mTitle = new MutableLiveData<>();
         setTitle(context.getResources().getString(R.string.app_name));
     }
@@ -30,10 +28,6 @@ public class MainViewModel extends ViewModel {
         return mTitle;
     }
 
-
-    public PageRepository getPageLiveData() {
-        return mPageLiveData;
-    }
 
 
 

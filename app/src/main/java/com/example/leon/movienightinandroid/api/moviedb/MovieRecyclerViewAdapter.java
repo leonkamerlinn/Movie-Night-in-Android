@@ -1,7 +1,7 @@
 package com.example.leon.movienightinandroid.api.moviedb;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.arch.lifecycle.LifecycleOwner;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,6 +20,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * Created by Leon on 2/4/2018.
  */
@@ -29,12 +33,22 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
     private final MainViewModel mViewModel;
     private final Activity mActivity;
     private MovieListener mMovieListener;
+    private List<Movie> mMovies;
 
 
+    @SuppressLint("CheckResult")
     @Inject
-    public MovieRecyclerViewAdapter(MainViewModel viewModel, Activity activity) {
+    public MovieRecyclerViewAdapter(MainViewModel viewModel, Activity activity, PageRepository pageRepository) {
         mViewModel = viewModel;
         mActivity = activity;
+        mMovies = new ArrayList<>();
+        pageRepository.getObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(repository -> {
+                    mMovies.addAll(repository.getLastPage().results);
+                    notifyDataSetChanged();
+                });
     }
 
 
@@ -51,8 +65,7 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
         ItemMovieBinding binding = holder.binding;
-        List<Movie> movies = new ArrayList<>(mViewModel.getPageLiveData().getMovies());
-        Movie movie = movies.get(position);
+        Movie movie = mMovies.get(position);
 
 
         String title = movie.original_title;
@@ -67,19 +80,19 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
 
     @Override
     public int getItemCount() {
-        return mViewModel.getPageLiveData().getMovies().size();
+        return mMovies.size();
     }
 
 
 
     public void clear() {
-        mViewModel.getPageLiveData().getMovies().clear();
+        //mViewModel.getPageLiveData().getMovies().clear();
         notifyDataSetChanged();
     }
 
 
     private void notifyPage(Page page) {
-        notifyItemRangeInserted(mViewModel.getPageLiveData().getMovies().size() - 1, page.results.size());
+        //notifyItemRangeInserted(mViewModel.getPageLiveData().getMovies().size() - 1, page.results.size());
     }
 
     public void setItemListener(MovieListener movieListener) {

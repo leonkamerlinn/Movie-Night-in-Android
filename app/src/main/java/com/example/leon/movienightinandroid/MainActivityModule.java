@@ -1,14 +1,10 @@
 package com.example.leon.movienightinandroid;
 
 import android.app.Activity;
-import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 
-import com.example.leon.movienightinandroid.application.ApplicationModule;
 import com.example.leon.movienightinandroid.databinding.ActivityMainBinding;
-import com.example.leon.movienightinandroid.di.qualifier.ActivityContext;
 import com.example.leon.movienightinandroid.di.scope.ActivityScoped;
 
 import dagger.Binds;
@@ -34,7 +30,7 @@ public abstract class MainActivityModule {
         binding.setLifecycleOwner(activity);
         binding.setModel(viewModel);
 
-        viewModel.getPageLiveData().isLoading().observe(activity, binding::setLoading);
+        //viewModel.getPageLiveData().isLoading().observe(activity, binding::setLoading);
         return binding;
     }
 

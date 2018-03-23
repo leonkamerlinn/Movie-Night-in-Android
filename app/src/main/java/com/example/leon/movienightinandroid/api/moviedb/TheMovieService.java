@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.internal.operators.single.SingleToObservable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
@@ -66,7 +69,7 @@ public class TheMovieService {
 
     public interface Repository {
         @GET(TheMovieService.DISCOVER_MOVIE_PATH)
-        Observable<Page> discoverMovies(@Query(TheMovieService.PAGE_QUERY) int page, @QueryMap Map<String, Object> map);
+        Single<Page> discoverMovies(@Query(TheMovieService.PAGE_QUERY) int page, @QueryMap Map<String, Object> map);
 
         @GET(DISCOVER_MOVIE_PATH)
         Observable<Page> discoverMovies(@Query(TheMovieService.PAGE_QUERY) int page);
