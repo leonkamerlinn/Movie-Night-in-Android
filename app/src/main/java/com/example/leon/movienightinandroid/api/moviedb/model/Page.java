@@ -23,6 +23,6 @@ public class Page {
 
     @Override
     public String toString() {
-        return String.format("Page: %s", page);
+        return String.format("Page: %s, Total pages %s", page, total_pages);
     }
 }

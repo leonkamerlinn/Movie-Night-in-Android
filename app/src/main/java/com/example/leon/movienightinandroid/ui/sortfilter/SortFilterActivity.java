@@ -1,5 +1,6 @@
 package com.example.leon.movienightinandroid.ui.sortfilter;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
@@ -30,13 +31,6 @@ import dagger.android.support.DaggerAppCompatActivity;
 
 
 public class SortFilterActivity extends DaggerAppCompatActivity implements DatePickerDialog.OnDateSetListener {
-    public static final String SORT_ITEM_EXTRA = "sort_item_extra";
-    public static final String GENRE_TAGS_EXTRA = "genre_tags_extra";
-    public static final String DATE_FROM_EXTRA = "date_from_extra";
-    public static final String DATE_TO_EXTRA = "date_to_extra";
-    public static final String MOVIE_EXTRA = "movie_extra";
-    public static final String VOTES_EXTRA = "votes_extra";
-    public static final String RATING_EXTRA = "rating_extra";
     public static final String FILTER_EXTRA = "filter_extra";
 
     @Inject
@@ -44,44 +38,12 @@ public class SortFilterActivity extends DaggerAppCompatActivity implements DateP
     @Inject
     SortFilterViewModel viewModel;
 
+    @SuppressLint("CheckResult")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupActionBar();
         populateGenreCheckboxes();
-
-        Intent intent = getIntent();
-
-        if (intent.hasExtra(SORT_ITEM_EXTRA)) {
-            viewModel.setSortItemExtra(intent.getStringExtra(SORT_ITEM_EXTRA));
-        }
-
-        if (intent.hasExtra(GENRE_TAGS_EXTRA)) {
-            binding.tagLayout.setCheckedGenres(intent.getStringArrayExtra(GENRE_TAGS_EXTRA));
-        }
-
-        if (intent.hasExtra(DATE_FROM_EXTRA)) {
-            viewModel.dateFromSetText(intent.getStringExtra(DATE_FROM_EXTRA));
-        }
-
-        if (intent.hasExtra(DATE_TO_EXTRA)) {
-            viewModel.dateToSetText(intent.getStringExtra(DATE_TO_EXTRA));
-        }
-
-        if (intent.hasExtra(MOVIE_EXTRA)) {
-            boolean checked = intent.getBooleanExtra(MOVIE_EXTRA, false);
-            viewModel.setMovieSwitchChecked(checked);
-
-            System.out.println(checked);
-        }
-
-        if (intent.hasExtra(VOTES_EXTRA)) {
-            viewModel.setVotesExtra(intent.getIntExtra(VOTES_EXTRA, 0));
-        }
-
-        if (intent.hasExtra(RATING_EXTRA)) {
-            viewModel.setRatingExtra(intent.getFloatExtra(RATING_EXTRA, 0));
-        }
 
 
         new DateInputMask(binding.editTextDateFrom, (text, selection) -> {
@@ -126,16 +88,6 @@ public class SortFilterActivity extends DaggerAppCompatActivity implements DateP
     }
 
 
-    private void datePicker() {
-        Calendar now = Calendar.getInstance();
-        DatePickerDialog dpd = DatePickerDialog.newInstance(
-                this,
-                now.get(Calendar.YEAR),
-                now.get(Calendar.MONTH),
-                now.get(Calendar.DAY_OF_MONTH)
-        );
-        dpd.show(getFragmentManager(), "Datepickerdialog");
-    }
 
 
 
@@ -148,8 +100,6 @@ public class SortFilterActivity extends DaggerAppCompatActivity implements DateP
     }
 
 
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent returnIntent = new Intent();
@@ -157,31 +107,19 @@ public class SortFilterActivity extends DaggerAppCompatActivity implements DateP
             case R.id.menu_item_done:
 
 
-
-
                 String selectedItem = binding.sortSpinner.getSelectedItem().toString();
-                returnIntent.putExtra(SORT_ITEM_EXTRA, selectedItem);
 
                 List<String> values = binding.tagLayout.getCheckedValues();
                 String[] arr = values.toArray(new String[values.size()]);
-                returnIntent.putExtra(GENRE_TAGS_EXTRA, arr);
 
                 String releaseFrom = binding.editTextDateFrom.getText().toString();
-                returnIntent.putExtra(DATE_FROM_EXTRA, releaseFrom);
-
                 String releaseTo = binding.editTextDateTo.getText().toString();
-                returnIntent.putExtra(DATE_TO_EXTRA, releaseTo);
-
                 boolean movie = binding.movieSwitch.isChecked();
-                returnIntent.putExtra(MOVIE_EXTRA, movie);
-
                 String votes = binding.numberOfVotes.getText().toString();
-                returnIntent.putExtra(VOTES_EXTRA, Integer.valueOf(votes));
-
                 float rating = binding.ratingBar.getRating();
-                returnIntent.putExtra(RATING_EXTRA, rating);
 
                 Filter filter = new Filter(selectedItem, arr, releaseFrom, releaseTo, movie, Integer.valueOf(votes), (int) rating);
+
                 returnIntent.putExtra(FILTER_EXTRA, filter);
                 setResult(RESULT_OK, returnIntent);
                 finish();

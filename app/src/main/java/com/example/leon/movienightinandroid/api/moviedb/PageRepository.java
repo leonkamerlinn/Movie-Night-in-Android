@@ -24,14 +24,18 @@ import io.reactivex.subjects.PublishSubject;
 @Singleton
 public class PageRepository implements SingleObserver<Page> {
     private final HashMap<String, Object> mQueryMap;
-    private SearchFilter mMode;
+    private FilterState mMode;
     private Page mPreviusPage;
     private Page mCurrentPage;
     private boolean isLoading;
+    private int mCurretResultPage = 0;
+
 
     public PublishSubject<String> scrollerSubject = PublishSubject.create();
     public PublishSubject<Filter> filterSubject = PublishSubject.create();
     private PublishSubject<PageRepository> pageRepositorySubject = PublishSubject.create();
+    private PublishSubject<Boolean> clearSubject = PublishSubject.create();
+
 
 
     public Observable<String> getScroller() {
@@ -40,10 +44,13 @@ public class PageRepository implements SingleObserver<Page> {
     public Observable<Filter> getFilter() {
         return filterSubject;
     }
-
     public Observable<PageRepository> getObservable() {
         return pageRepositorySubject;
     }
+    public Observable<Boolean> clearObservable() {
+        return clearSubject;
+    }
+
 
 
     @SuppressLint("CheckResult")
@@ -56,7 +63,7 @@ public class PageRepository implements SingleObserver<Page> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this);
 
-        setMode(SearchFilter.DISCOVER_MOVIES);
+        setMode(FilterState.DISCOVER_MOVIES);
 
 
         getScroller()
@@ -107,13 +114,26 @@ public class PageRepository implements SingleObserver<Page> {
                     break;
             }
         });
+
+
+        getFilter().subscribe(filter -> {
+            mCurretResultPage = 0;
+            clearSubject.onNext(true);
+            mQueryMap.put(TheMovieService.SORT_BY_QUERY, TheMovieService.SORT_BY_VOTE_COUNT_ASC);
+
+            setMode(FilterState.FILTER);
+            movieService.discoverMovies(1, mQueryMap)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this);
+            });
     }
 
 
 
 
     public int getNextPage() {
-       return mCurrentPage.page+1;
+       return mCurretResultPage+1;
     }
 
     public Page getCurrentPage() {
@@ -123,16 +143,11 @@ public class PageRepository implements SingleObserver<Page> {
 
 
 
-
-
-
-
-
-    public void setMode(SearchFilter mode) {
+    public void setMode(FilterState mode) {
         mMode = mode;
     }
 
-    public SearchFilter getMode() {
+    public FilterState getMode() {
         return mMode;
     }
 
@@ -146,15 +161,17 @@ public class PageRepository implements SingleObserver<Page> {
         if (mCurrentPage == null) {
             mCurrentPage = page;
             isLoading = false;
-            System.out.println(page.toString());
             pageRepositorySubject.onNext(this);
+            mCurretResultPage = page.page;
+            System.out.println(page.toString());
         } else {
-            if (!page.equals(mCurrentPage) && page.page > mCurrentPage.page) {
+            if ( (!page.equals(mCurrentPage) && page.page > mCurrentPage.page) || mCurretResultPage == 0) {
                 mPreviusPage = mCurrentPage;
                 mCurrentPage = page;
                 isLoading = false;
-                System.out.println(page.toString());
                 pageRepositorySubject.onNext(this);
+                mCurretResultPage = page.page;
+                System.out.println(page.toString());
             }
         }
 

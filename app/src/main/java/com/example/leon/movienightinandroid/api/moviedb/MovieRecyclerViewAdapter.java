@@ -21,6 +21,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -45,6 +46,13 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(repository -> {
                     mMovies.addAll(repository.getCurrentPage().results);
+                    notifyPage(pageRepository.getCurrentPage());
+                });
+
+
+        pageRepository.clearObservable()
+                .subscribe(aBoolean -> {
+                    mMovies.clear();
                     notifyDataSetChanged();
                 });
     }
@@ -83,21 +91,19 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
 
 
 
-    public void clear() {
-        //mViewModel.getPageLiveData().getMovies().clear();
-        notifyDataSetChanged();
-    }
 
 
     private void notifyPage(Page page) {
-        //notifyItemRangeInserted(mViewModel.getPageLiveData().getMovies().size() - 1, page.results.size());
+        notifyItemRangeInserted(getMovies().size() - 1, page.results.size());
     }
 
     public void setItemListener(MovieListener movieListener) {
         mMovieListener = movieListener;
     }
 
-
+    public List<Movie> getMovies() {
+        return mMovies;
+    }
 
 
     public static class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

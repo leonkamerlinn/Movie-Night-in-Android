@@ -1,6 +1,6 @@
 package com.example.leon.movienightinandroid.api.moviedb;
 
-public enum SearchFilter {
+public enum FilterState {
     SEARCH_ALL,
     SEARCH_MOVIES,
     SEARCH_TV,

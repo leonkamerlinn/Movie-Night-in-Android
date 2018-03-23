@@ -6,6 +6,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -16,25 +17,22 @@ import android.view.View;
 
 import com.example.leon.movienightinandroid.api.moviedb.MovieRecyclerViewAdapter;
 import com.example.leon.movienightinandroid.api.moviedb.PageRepository;
-import com.example.leon.movienightinandroid.api.moviedb.SearchFilter;
+import com.example.leon.movienightinandroid.api.moviedb.FilterState;
 import com.example.leon.movienightinandroid.api.moviedb.TheMovieService;
 import com.example.leon.movienightinandroid.api.moviedb.model.Filter;
+import com.example.leon.movienightinandroid.api.moviedb.model.Movie;
 import com.example.leon.movienightinandroid.databinding.ActivityMainBinding;
+import com.example.leon.movienightinandroid.dialog.MovieDialog;
 import com.example.leon.movienightinandroid.ui.sortfilter.SortFilterActivity;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding2.support.v7.widget.SearchViewQueryTextEvent;
 import com.jakewharton.rxbinding2.widget.RxCompoundButton;
-
-import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerAppCompatActivity;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -44,14 +42,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MovieRecycl
     private Observable<Boolean> mRadioGroupObservable;
     private GridLayoutManager mLayoutManager;
     private String mQuery = "";
-    String[] checkedGenres;
-    private String mSortSelectedItemExtra;
-    private String mDateFromExtra;
-    private String mDateToExtra;
-    private boolean mMovieExtra;
-    private int mVotesExtra;
-    private int mResultCode;
-    private float mRatingExtra;
 
     @Inject
     ActivityMainBinding binding;
@@ -64,8 +54,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MovieRecycl
     @Inject
     PageRepository pageRepository;
 
-    private HashMap<String, Object> mQueryMap;
-
 
     @SuppressLint("CheckResult")
     @Override
@@ -74,8 +62,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MovieRecycl
         setSupportActionBar(binding.toolbar);
         setupMovieRecyclerView();
         movieRecyclerViewAdapter.setItemListener(this);
-        mQueryMap = new HashMap<>();
-
 
     }
 
@@ -131,7 +117,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MovieRecycl
 
             if (binding.radioAll.isChecked()) {
 
-                pageRepository.setMode(SearchFilter.SEARCH_ALL);
+                pageRepository.setMode(FilterState.SEARCH_ALL);
                 movieRepository.searchMulti(query)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -139,7 +125,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MovieRecycl
 
             } else if (binding.radioTv.isChecked()) {
 
-                pageRepository.setMode(SearchFilter.SEARCH_TV);
+                pageRepository.setMode(FilterState.SEARCH_TV);
                 movieRepository.searchTv(query)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -147,7 +133,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MovieRecycl
 
             } else if (binding.radioMovie.isChecked()) {
 
-                pageRepository.setMode(SearchFilter.SEARCH_MOVIES);
+                pageRepository.setMode(FilterState.SEARCH_MOVIES);
                 movieRepository.searchMovie(query)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -182,23 +168,9 @@ public class MainActivity extends DaggerAppCompatActivity implements MovieRecycl
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item_sort:
-                //SortFilterDialog.newInstance().show(getSupportFragmentManager(), SortFilterDialog.TAG);
                 Intent intent = new Intent(this, SortFilterActivity.class);
-
-                if (mResultCode == Activity.RESULT_OK) {
-                    intent.putExtra(SortFilterActivity.SORT_ITEM_EXTRA, mSortSelectedItemExtra);
-                    intent.putExtra(SortFilterActivity.GENRE_TAGS_EXTRA, checkedGenres);
-                    intent.putExtra(SortFilterActivity.DATE_FROM_EXTRA, mDateFromExtra);
-                    intent.putExtra(SortFilterActivity.DATE_TO_EXTRA, mDateToExtra);
-                    intent.putExtra(SortFilterActivity.MOVIE_EXTRA, mMovieExtra);
-                    intent.putExtra(SortFilterActivity.VOTES_EXTRA, mVotesExtra);
-                    intent.putExtra(SortFilterActivity.RATING_EXTRA, mRatingExtra);
-                }
-
-
                 startActivityForResult(intent, REQUEST_CODE);
                 break;
-
             default:
                 break;
         }
@@ -210,28 +182,10 @@ public class MainActivity extends DaggerAppCompatActivity implements MovieRecycl
         if (requestCode == REQUEST_CODE) {
             if(resultCode == Activity.RESULT_OK){
 
-
-
-
-                mResultCode = Activity.RESULT_OK;
-
-
                 if (data.hasExtra(SortFilterActivity.FILTER_EXTRA)) {
                     Filter filter = data.getParcelableExtra(SortFilterActivity.FILTER_EXTRA);
                     pageRepository.filterSubject.onNext(filter);
-                    System.out.println(filter.toString());
                 }
-                //mQueryMap.put(TheMovieService.SORT_BY_QUERY, TheMovieService.SORT_BY_VOTE_COUNT_ASC);
-
-
-
-
-
-              /*  viewModel.getPageLiveData().setMode(SearchFilter.FILTER);
-                movieRepository.discoverMovies(viewModel.getPageLiveData().getNextPage(), mQueryMap)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(viewModel.getPageLiveData());*/
 
             } else if (resultCode == Activity.RESULT_CANCELED) {
 
@@ -241,11 +195,10 @@ public class MainActivity extends DaggerAppCompatActivity implements MovieRecycl
 
     @Override
     public void onItemClick(View view, int position) {
-      /*  Movie movie = viewModel.getPageLiveData().getMovies().get(position);
+        Movie movie = movieRecyclerViewAdapter.getMovies().get(position);
         MovieDialog movieDialog = MovieDialog.newInstance(movie);
-
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        movieDialog.show(ft, MovieDialog.TAG);*/
+        movieDialog.show(ft, MovieDialog.TAG);
     }
 
 
@@ -267,12 +220,9 @@ public class MainActivity extends DaggerAppCompatActivity implements MovieRecycl
             //adapter position of the first visible view.
             int lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
             int visibleThreshold = 30;
-
             if (totalItemCount <= lastVisibleItem + visibleThreshold) {
                 pageRepository.scrollerSubject.onNext(mQuery);
             }
-
-
 
         }
     }
