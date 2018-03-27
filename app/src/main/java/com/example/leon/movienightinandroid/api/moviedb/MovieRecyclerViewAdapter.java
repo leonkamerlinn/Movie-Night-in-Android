@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -72,7 +73,7 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
     public void onBindViewHolder(MovieViewHolder holder, int position) {
         ItemMovieBinding binding = holder.binding;
         Movie movie = mMovies.get(position);
-
+        System.out.println(movie);
 
         String title = movie.original_title;
         String name = movie.original_name;

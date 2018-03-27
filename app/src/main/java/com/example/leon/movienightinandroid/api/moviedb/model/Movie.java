@@ -105,7 +105,7 @@ public class Movie extends LiveData<Movie> implements Comparable<Movie>, Parcela
 
     @Override
     public String toString() {
-        return String.format("%s, %s, %s", title, poster_path, release_date);
+        return String.format("Title: %s, Poster path: %s, Release date: %s, Vote count: %s, Popularity: %s", title, poster_path, release_date, vote_count, popularity);
     }
 
     @Override

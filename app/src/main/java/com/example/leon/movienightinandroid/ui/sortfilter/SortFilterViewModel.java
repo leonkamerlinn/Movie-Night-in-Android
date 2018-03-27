@@ -1,6 +1,5 @@
 package com.example.leon.movienightinandroid.ui.sortfilter;
 
-import android.arch.core.util.Function;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
@@ -23,7 +22,7 @@ public class SortFilterViewModel extends ViewModel {
 
     private MutableLiveData<Integer> mSortItemSelected;
     private MutableLiveData<String> mVotes;
-    private MutableLiveData<Integer> mRating;
+    private MutableLiveData<Float> mRating;
     private MutableLiveData<Boolean> mMovieChecked;
 
 
@@ -40,6 +39,7 @@ public class SortFilterViewModel extends ViewModel {
 
         mRating = new MutableLiveData<>();
         mMovieChecked = new MutableLiveData<>();
+        setMovieSwitchChecked(false);
 
 
         Calendar now = Calendar.getInstance();
@@ -102,10 +102,10 @@ public class SortFilterViewModel extends ViewModel {
 
     public void setRatingExtra(float ratingExtra) {
 
-        mRating.setValue((int) ratingExtra);
+        mRating.setValue(ratingExtra);
     }
 
-    public LiveData<Integer> getRating() {
+    public LiveData<Float> getRating() {
         return mRating;
     }
 

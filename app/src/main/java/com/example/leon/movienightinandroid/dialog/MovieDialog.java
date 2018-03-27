@@ -50,8 +50,8 @@ public class MovieDialog extends DialogFragment {
                 .load(imageUrl)
                 .into(binding.imageView);
 
-        binding.votesCount.setText(String.valueOf(movie.id));
-        binding.ratingBar.setNumStars((int) movie.vote_average);
+        binding.votesCount.setText(String.valueOf(movie.vote_count));
+        binding.ratingBar.setRating(movie.vote_average);
         binding.date.setText(movie.release_date);
         binding.description.setText(movie.overview);
 

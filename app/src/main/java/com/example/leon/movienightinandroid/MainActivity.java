@@ -6,6 +6,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,6 +43,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MovieRecycl
     private Observable<Boolean> mRadioGroupObservable;
     private GridLayoutManager mLayoutManager;
     private String mQuery = "";
+    private Filter mFilter;
 
     @Inject
     ActivityMainBinding binding;
@@ -53,6 +55,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MovieRecycl
     MainViewModel viewModel;
     @Inject
     PageRepository pageRepository;
+
 
 
     @SuppressLint("CheckResult")
@@ -169,6 +172,9 @@ public class MainActivity extends DaggerAppCompatActivity implements MovieRecycl
         switch (item.getItemId()) {
             case R.id.item_sort:
                 Intent intent = new Intent(this, SortFilterActivity.class);
+                if (mFilter != null) {
+                    intent.putExtra(SortFilterActivity.FILTER_EXTRA, mFilter);
+                }
                 startActivityForResult(intent, REQUEST_CODE);
                 break;
             default:
@@ -183,8 +189,8 @@ public class MainActivity extends DaggerAppCompatActivity implements MovieRecycl
             if(resultCode == Activity.RESULT_OK){
 
                 if (data.hasExtra(SortFilterActivity.FILTER_EXTRA)) {
-                    Filter filter = data.getParcelableExtra(SortFilterActivity.FILTER_EXTRA);
-                    pageRepository.filterSubject.onNext(filter);
+                    mFilter = data.getParcelableExtra(SortFilterActivity.FILTER_EXTRA);
+                    pageRepository.filterSubject.onNext(mFilter);
                 }
 
             } else if (resultCode == Activity.RESULT_CANCELED) {

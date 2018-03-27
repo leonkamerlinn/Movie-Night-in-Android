@@ -7,6 +7,8 @@ import android.databinding.DataBindingUtil;
 import com.example.leon.movienightinandroid.databinding.ActivityMainBinding;
 import com.example.leon.movienightinandroid.di.scope.ActivityScoped;
 
+import javax.inject.Singleton;
+
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
@@ -16,6 +18,7 @@ import dagger.Provides;
  */
 
 @Module
+@Singleton
 public abstract class MainActivityModule {
 
     @Binds

@@ -3,16 +3,14 @@ package com.example.leon.movienightinandroid.ui.sortfilter;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.util.Pair;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.example.leon.movienightinandroid.R;
 import com.example.leon.movienightinandroid.api.moviedb.model.Filter;
@@ -21,7 +19,6 @@ import com.example.leon.movienightinandroid.utils.DateInputMask;
 import com.jakewharton.rxbinding2.widget.RxCompoundButton;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
-import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,6 +29,7 @@ import dagger.android.support.DaggerAppCompatActivity;
 
 public class SortFilterActivity extends DaggerAppCompatActivity implements DatePickerDialog.OnDateSetListener {
     public static final String FILTER_EXTRA = "filter_extra";
+    private static final String TAG = SortFilterActivity.class.getSimpleName();
 
     @Inject
     ActivitySortFilterBinding binding;
@@ -64,11 +62,18 @@ public class SortFilterActivity extends DaggerAppCompatActivity implements DateP
                 .skipInitialValue()
                 .subscribe(viewModel::setMovieSwitchChecked);
 
+        Intent intent = getIntent();
+        if (intent.hasExtra(FILTER_EXTRA)) {
+            Filter filter = intent.getParcelableExtra(FILTER_EXTRA);
+
+            Log.i(TAG, filter.toString());
+        }
+
 
     }
 
     private void populateGenreCheckboxes() {
-        String[] items = getResources().getStringArray(R.array.filter_gener_items);
+        String[] items = getResources().getStringArray(R.array.filter_genre_items);
         for(String item: items) {
             CheckBox checkBox  = (CheckBox) LayoutInflater.from(this).inflate(R.layout.checkbox_item, null, false);
             checkBox.setText(item);

@@ -22,35 +22,29 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public abstract class ApplicationModule {
-    private static TheMovieService.Repository mMovieService;
-    private static OkHttpClient okk;
 
     @Binds
     abstract Context bindContext(Application application);
 
     @Provides
     static OkHttpClient provideOkHttpClient() {
-        okk = new OkHttpClient.Builder()
-                .addInterceptor(chain -> {
-                    Request original = chain.request();
-                    HttpUrl httpUrl = original.url();
+        return new OkHttpClient.Builder()
+            .addInterceptor(chain -> {
+                Request original = chain.request();
+                HttpUrl httpUrl = original.url();
 
-                    HttpUrl newHttpUrl = httpUrl.newBuilder().addQueryParameter(TheMovieService.API_KEY_QUERY, BuildConfig.API_KEY).build();
+                HttpUrl newHttpUrl = httpUrl.newBuilder().addQueryParameter(TheMovieService.API_KEY_QUERY, BuildConfig.API_KEY).build();
 
-                    //System.out.println(newHttpUrl.toString());
+                System.out.println(newHttpUrl.toString());
 
-                    Request.Builder requestBuilder = original.newBuilder().url(newHttpUrl);
-                    Request request = requestBuilder.build();
-
-
-
-
-                    return chain.proceed(request);
-                }).build();
+                Request.Builder requestBuilder = original.newBuilder().url(newHttpUrl);
+                Request request = requestBuilder.build();
 
 
 
-        return okk;
+
+                return chain.proceed(request);
+            }).build();
     }
 
     @Provides
@@ -67,11 +61,6 @@ public abstract class ApplicationModule {
 
     @Provides
     static TheMovieService.Repository provideMovieService(Retrofit retrofit) {
-        if (mMovieService == null) {
-            mMovieService = retrofit.create(TheMovieService.Repository.class);
-        }
-
-
-        return mMovieService;
+        return retrofit.create(TheMovieService.Repository.class);
     }
 }

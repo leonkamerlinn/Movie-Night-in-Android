@@ -3,6 +3,12 @@ package com.example.leon.movienightinandroid.api.moviedb.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class Filter implements Parcelable {
     private String mSortBy;
     private String[] mGenres;
@@ -60,16 +66,34 @@ public class Filter implements Parcelable {
         mGenres = genres;
     }
 
-    public String getDateFrom() {
-        return mDateFrom;
+    public String getDateFrom(boolean format) {
+        DateFormat originalFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+        DateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        Date date = null;
+        try {
+            date = originalFormat.parse(mDateFrom);
+        } catch (ParseException e) {
+        }
+        String formattedDate = targetFormat.format(date);
+
+        return format ? formattedDate : mDateFrom;
     }
 
     public void setDateFrom(String dateFrom) {
         mDateFrom = dateFrom;
     }
 
-    public String getDateTo() {
-        return mDateTo;
+    public String getDateTo(boolean format) {
+        DateFormat originalFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+        DateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        Date date = null;
+        try {
+            date = originalFormat.parse(mDateTo);
+        } catch (ParseException e) {
+        }
+        String formattedDate = targetFormat.format(date);
+
+        return format ? formattedDate : mDateTo;
     }
 
     public void setDateTo(String dateTo) {
@@ -118,6 +142,6 @@ public class Filter implements Parcelable {
 
     @Override
     public String toString() {
-        return String.format("%s, %s", getDateFrom(), getDateTo());
+        return String.format("%s, %s", getDateFrom(true), getDateTo(true));
     }
 }

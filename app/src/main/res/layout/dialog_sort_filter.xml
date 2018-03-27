@@ -90,7 +90,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:entries="@array/filter_gener_items"/>
+                android:entries="@array/filter_genre_items"/>
         
         </LinearLayout>
         

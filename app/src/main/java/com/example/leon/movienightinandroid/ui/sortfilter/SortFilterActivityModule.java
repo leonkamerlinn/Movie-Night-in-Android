@@ -13,6 +13,8 @@ import com.example.leon.movienightinandroid.R;
 import com.example.leon.movienightinandroid.databinding.ActivitySortFilterBinding;
 import com.example.leon.movienightinandroid.di.scope.ActivityScoped;
 
+import javax.inject.Singleton;
+
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
@@ -22,6 +24,7 @@ import dagger.Provides;
  */
 
 @Module
+@Singleton
 public abstract class SortFilterActivityModule {
 
 
