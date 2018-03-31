@@ -42,7 +42,7 @@ public class PageRepository implements SingleObserver<Page> {
     public PublishSubject<String> scrollerSubject = PublishSubject.create();
     public PublishSubject<Filter> filterSubject = PublishSubject.create();
     private PublishSubject<PageRepository> pageRepositorySubject = PublishSubject.create();
-    private PublishSubject<Boolean> clearSubject = PublishSubject.create();
+    public PublishSubject<Boolean> clearSubject = PublishSubject.create();
 
 
 
@@ -141,23 +141,23 @@ public class PageRepository implements SingleObserver<Page> {
             clearSubject.onNext(true);
 
             switch (filter.getSortBy()) {
-                case "popularity":
+                case Filter.POPULARITY:
                     mQueryMap.put(TheMovieService.SORT_BY_QUERY, TheMovieService.SORT_BY_POPULARITY_DESC);
                     break;
 
-                case "release date":
+                case Filter.RELEASE_DATE:
                     mQueryMap.put(TheMovieService.SORT_BY_QUERY, TheMovieService.SORT_BY_RELEASE_DATE_DESC);
                     break;
 
-                case "revenue":
+                case Filter.REVENUE:
                     mQueryMap.put(TheMovieService.SORT_BY_QUERY, TheMovieService.SORT_BY_REVENUE_DESC);
                     break;
 
-                case "average votes":
+                case Filter.AVERAGE_VOTES:
                     mQueryMap.put(TheMovieService.SORT_BY_QUERY, TheMovieService.SORT_BY_VOTE_AVERAGE_DESC);
                     break;
 
-                case "votes":
+                case Filter.VOTES:
                     mQueryMap.put(TheMovieService.SORT_BY_QUERY, TheMovieService.SORT_BY_VOTE_COUNT_DESC);
                     break;
 
@@ -260,9 +260,6 @@ public class PageRepository implements SingleObserver<Page> {
                 System.out.println(page.toString());
             }
         }
-
-
-
 
     }
 

@@ -10,6 +10,15 @@ import java.util.Date;
 import java.util.Locale;
 
 public class Filter implements Parcelable {
+    public static final String POPULARITY = "popularity";
+    public static final String RELEASE_DATE = "release date";
+    public static final String REVENUE = "revenue";
+    public static final String AVERAGE_VOTES = "average votes";
+    public static final String VOTES = "votes";
+
+
+
+
     private String mSortBy;
     private String[] mGenres;
     private String mDateFrom;
