@@ -15,7 +15,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * Created by Leon on 2/4/2018.
  */
 
-public class Movie extends LiveData<Movie> implements Comparable<Movie>, Parcelable {
+public class Movie implements Comparable<Movie>, Parcelable {
     public int vote_count;
     public int id;
     public boolean video;
@@ -108,9 +108,5 @@ public class Movie extends LiveData<Movie> implements Comparable<Movie>, Parcela
         return String.format("Title: %s, Poster path: %s, Release date: %s, Vote count: %s, Popularity: %s", title, poster_path, release_date, vote_count, popularity);
     }
 
-    @Override
-    protected void onActive() {
-        setValue(this);
-    }
 
 }

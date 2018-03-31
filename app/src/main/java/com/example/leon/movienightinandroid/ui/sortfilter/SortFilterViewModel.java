@@ -1,5 +1,6 @@
 package com.example.leon.movienightinandroid.ui.sortfilter;
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
@@ -14,7 +15,7 @@ import java.util.Calendar;
 /**
  * Created by Leon on 2/24/2018.
  */
-
+@SuppressLint("StaticFieldLeak")
 public class SortFilterViewModel extends ViewModel {
     private final Context mContext;
     private MutableLiveData<String> mDateFrom;

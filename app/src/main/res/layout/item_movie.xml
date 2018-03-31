@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="model"
+            type="com.example.leon.movienightinandroid.api.moviedb.model.MovieViewModel" />
+
+    </data>
 	
 	<android.support.constraint.ConstraintLayout
 		android:layout_width="match_parent"
@@ -27,10 +34,11 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:gravity="center"
-					android:text="@string/app_name" />
+					android:text="@{model.getTitle()}" />
 
 
 				<ImageView
+                    app:imageLoad="@{model.getImageUrl()}"
 					android:layout_gravity="center"
 					android:src="@mipmap/launcher"
 					android:id="@+id/imageView"

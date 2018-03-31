@@ -2,6 +2,7 @@ package com.example.leon.movienightinandroid.api.moviedb;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.arch.lifecycle.LifecycleOwner;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.example.leon.movienightinandroid.MainViewModel;
 import com.example.leon.movienightinandroid.R;
 import com.example.leon.movienightinandroid.api.moviedb.model.Movie;
+import com.example.leon.movienightinandroid.api.moviedb.model.MovieViewModel;
 import com.example.leon.movienightinandroid.api.moviedb.model.Page;
 import com.example.leon.movienightinandroid.databinding.ItemMovieBinding;
 
@@ -73,15 +75,9 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
     public void onBindViewHolder(MovieViewHolder holder, int position) {
         ItemMovieBinding binding = holder.binding;
         Movie movie = mMovies.get(position);
-        System.out.println(movie);
+        binding.setLifecycleOwner((LifecycleOwner) mActivity);
+        binding.setModel(new MovieViewModel(movie));
 
-        String title = movie.original_title;
-        String name = movie.original_name;
-        binding.sortTextView.setText((title == null) ? name : title);
-        String imageUrl = TheMovieService.IMAGE_URL + movie.poster_path;
-        Glide.with(binding.getRoot().getContext())
-                .load(imageUrl)
-                .into(binding.imageView);
 
     }
 
