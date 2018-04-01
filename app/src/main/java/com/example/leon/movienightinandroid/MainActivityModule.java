@@ -18,7 +18,6 @@ import dagger.Provides;
  */
 
 @Module
-@Singleton
 public abstract class MainActivityModule {
 
     @Binds

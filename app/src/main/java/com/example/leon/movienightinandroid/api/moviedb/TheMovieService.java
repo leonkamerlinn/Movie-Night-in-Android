@@ -69,16 +69,20 @@ public class TheMovieService {
 
     public interface Repository {
         @GET(TheMovieService.DISCOVER_MOVIE_PATH)
-        Single<Page> discoverMovies(@Query(TheMovieService.PAGE_QUERY) int page, @QueryMap Map<String, Object> map);
+        Single<Page> discoverMovies(
+                @Query(TheMovieService.PAGE_QUERY) int page,
+                @QueryMap Map<String, Object> map
+        );
 
         @GET(DISCOVER_MOVIE_PATH)
         Observable<Page> discoverMovies(@Query(TheMovieService.PAGE_QUERY) int page);
 
 
-
-
         @GET(TheMovieService.DISCOVER_TV_PATH)
-        Single<Page> discoverTv(@Query(TheMovieService.PAGE_QUERY) int page, @QueryMap Map<String, Object> map);
+        Single<Page> discoverTv(
+                @Query(TheMovieService.PAGE_QUERY) int page,
+                @QueryMap Map<String, Object> map
+        );
 
         @GET(TheMovieService.DISCOVER_TV_PATH)
         Observable<Page> discoverTv(@Query(TheMovieService.PAGE_QUERY) int page);
@@ -90,19 +94,28 @@ public class TheMovieService {
         Single<Page> searchMovie(@Query(TheMovieService.SEARCH_QUERY) String query);
 
         @GET(TheMovieService.SEARCH_MOVIE_PATH)
-        Single<Page> searchMovie(@Query(TheMovieService.PAGE_QUERY) int page, @QueryMap Map<String, Object> map);
+        Single<Page> searchMovie(
+                @Query(TheMovieService.PAGE_QUERY) int page,
+                @Query(TheMovieService.SEARCH_QUERY) String query
+        );
 
         @GET(TheMovieService.SEARCH_TV_PATH)
         Single<Page> searchTv(@Query(TheMovieService.SEARCH_QUERY) String query);
 
         @GET(TheMovieService.SEARCH_TV_PATH)
-        Single<Page> searchTv(@Query(TheMovieService.PAGE_QUERY) int page, @QueryMap Map<String, Object> map);
+        Single<Page> searchTv(
+                @Query(TheMovieService.PAGE_QUERY) int page,
+                @Query(TheMovieService.SEARCH_QUERY) String query
+        );
 
         @GET(TheMovieService.SEARCH_MULTI_PATH)
         Single<Page> searchMulti(@Query(TheMovieService.SEARCH_QUERY) String query);
 
         @GET(TheMovieService.SEARCH_MULTI_PATH)
-        Single<Page> searchMulti(@Query(TheMovieService.PAGE_QUERY) int page, @QueryMap Map<String, Object> map);
+        Single<Page> searchMulti(
+                @Query(TheMovieService.PAGE_QUERY) int page,
+                @Query(TheMovieService.SEARCH_QUERY) String query
+        );
     }
 
     /*

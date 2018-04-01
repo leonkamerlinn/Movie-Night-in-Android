@@ -119,6 +119,7 @@
             
     
         <com.example.leon.movienightinandroid.layout.TagLayout
+            app:setGenres="@{model.genres}"
             android:id="@+id/tagLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

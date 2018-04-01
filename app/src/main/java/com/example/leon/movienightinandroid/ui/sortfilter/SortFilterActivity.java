@@ -3,7 +3,6 @@ package com.example.leon.movienightinandroid.ui.sortfilter;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -60,13 +59,19 @@ public class SortFilterActivity extends DaggerAppCompatActivity implements DateP
 
         RxCompoundButton.checkedChanges(binding.movieSwitch)
                 .skipInitialValue()
-                .subscribe(viewModel::setMovieSwitchChecked);
+                .subscribe(viewModel::setMovie);
 
         Intent intent = getIntent();
         if (intent.hasExtra(FILTER_EXTRA)) {
             Filter filter = intent.getParcelableExtra(FILTER_EXTRA);
 
-            Log.i(TAG, filter.toString());
+            viewModel.setMovie(filter.isMovie());
+            viewModel.setRatingExtra(filter.getRating());
+            viewModel.dateToSetText(filter.getDateTo(false));
+            viewModel.dateFromSetText(filter.getDateFrom(false));
+            viewModel.setGenres(filter.getGenres());
+            viewModel.setSortItemExtra(filter.getSortBy());
+            viewModel.setVotesExtra(filter.getVotes());
         }
 
 

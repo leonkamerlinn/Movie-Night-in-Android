@@ -16,7 +16,8 @@ public class MovieViewModel extends ViewModel {
         String name = movie.original_name;
         mTitle.setValue((title == null) ? name : title);
 
-        String imageUrl = TheMovieService.IMAGE_URL + movie.poster_path;
+        String path = (movie.poster_path != null) ? movie.poster_path : movie.backdrop_path;
+        String imageUrl = TheMovieService.IMAGE_URL + path;
         mImageUrl.setValue(imageUrl);
     }
 

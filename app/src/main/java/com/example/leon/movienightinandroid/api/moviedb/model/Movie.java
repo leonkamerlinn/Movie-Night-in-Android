@@ -105,7 +105,7 @@ public class Movie implements Comparable<Movie>, Parcelable {
 
     @Override
     public String toString() {
-        return String.format("Title: %s, Poster path: %s, Release date: %s, Vote count: %s, Popularity: %s", title, poster_path, release_date, vote_count, popularity);
+        return String.format("Title: %s\n, Original name: %s\n, Original title: %s\n, Poster path: %s\n, Release date: %s\n, Vote count: %s\n, Popularity: %s\n", title, original_name, original_title, poster_path, release_date, vote_count, popularity);
     }
 
 

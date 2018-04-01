@@ -9,8 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
-import com.example.leon.movienightinandroid.MainViewModel;
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
 import com.example.leon.movienightinandroid.R;
 import com.example.leon.movienightinandroid.api.moviedb.model.Movie;
 import com.example.leon.movienightinandroid.api.moviedb.model.MovieViewModel;
@@ -24,15 +24,14 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Leon on 2/4/2018.
  */
+
 public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecyclerViewAdapter.MovieViewHolder>{
 
-    private final MainViewModel mViewModel;
     private final Activity mActivity;
     private MovieListener mMovieListener;
     private List<Movie> mMovies;
@@ -40,8 +39,8 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
 
     @SuppressLint("CheckResult")
     @Inject
-    public MovieRecyclerViewAdapter(MainViewModel viewModel, Activity activity, PageRepository pageRepository) {
-        mViewModel = viewModel;
+    public MovieRecyclerViewAdapter(Activity activity, PageRepository pageRepository) {
+        System.out.println(MovieRecyclerViewAdapter.class.getSimpleName());
         mActivity = activity;
         mMovies = new ArrayList<>();
         pageRepository.getObservable()
@@ -51,7 +50,6 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
                     mMovies.addAll(repository.getCurrentPage().results);
                     notifyPage(pageRepository.getCurrentPage());
                 });
-
 
         pageRepository.clearObservable()
                 .subscribe(aBoolean -> {
@@ -74,20 +72,18 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
         ItemMovieBinding binding = holder.binding;
-        Movie movie = mMovies.get(position);
+        Movie movie = getMovies().get(position);
         binding.setLifecycleOwner((LifecycleOwner) mActivity);
         binding.setModel(new MovieViewModel(movie));
-
-
+        System.out.println(movie.toString());
     }
+
+
 
     @Override
     public int getItemCount() {
-        return mMovies.size();
+        return getMovies().size();
     }
-
-
-
 
 
     private void notifyPage(Page page) {
@@ -99,7 +95,9 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
     }
 
     public List<Movie> getMovies() {
-        return mMovies;
+        return Stream.of(mMovies)
+                .filter(movie -> (movie.backdrop_path != null || movie.poster_path != null))
+                .collect(Collectors.toList());
     }
 
 

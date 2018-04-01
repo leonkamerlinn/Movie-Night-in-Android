@@ -24,9 +24,8 @@ public class SortFilterViewModel extends ViewModel {
     private MutableLiveData<Integer> mSortItemSelected;
     private MutableLiveData<String> mVotes;
     private MutableLiveData<Float> mRating;
-    private MutableLiveData<Boolean> mMovieChecked;
-
-
+    private MutableLiveData<Boolean> mIsMovie;
+    private MutableLiveData<String[]> mGenres = new MutableLiveData<>();
 
     public SortFilterViewModel(Context context) {
         mContext = context;
@@ -39,8 +38,8 @@ public class SortFilterViewModel extends ViewModel {
         mVotes.setValue("0");
 
         mRating = new MutableLiveData<>();
-        mMovieChecked = new MutableLiveData<>();
-        setMovieSwitchChecked(false);
+        mIsMovie = new MutableLiveData<>();
+        setMovie(true);
 
 
         Calendar now = Calendar.getInstance();
@@ -55,8 +54,17 @@ public class SortFilterViewModel extends ViewModel {
 
         String dateTo = String.format("%02d%02d%02d",past.get(Calendar.DAY_OF_MONTH), past.get(Calendar.MONTH), past.get(Calendar.YEAR));
         mDateTo.setValue(dateTo);
+        setGenres(new String[]{});
 
 
+    }
+
+    public void setGenres(String[] genres) {
+        mGenres.setValue(genres);
+    }
+
+    public LiveData<String[]> getGenres() {
+        return mGenres;
     }
 
     public LiveData<String> dateFromLiveData() {
@@ -78,9 +86,8 @@ public class SortFilterViewModel extends ViewModel {
 
 
     public LiveData<String> movieSwitchLiveData() {
-        return Transformations.map(mMovieChecked, checked -> checked ? mContext.getString(R.string.switch_tv) : mContext.getString(R.string.switch_movie));
+        return Transformations.map(mIsMovie, checked -> checked ? mContext.getString(R.string.switch_movie) : mContext.getString(R.string.switch_tv));
     }
-
 
     public void setSortItemExtra(String sortItemExtra) {
         String[] items = mContext.getResources().getStringArray(R.array.sort_items);
@@ -110,11 +117,11 @@ public class SortFilterViewModel extends ViewModel {
         return mRating;
     }
 
-    public void setMovieSwitchChecked(boolean movieSwitchChecked) {
-        mMovieChecked.setValue(movieSwitchChecked);
+    public void setMovie(boolean movieSwitchChecked) {
+        mIsMovie.setValue(movieSwitchChecked);
     }
 
     public LiveData<Boolean> isMovieChecked() {
-        return mMovieChecked;
+        return mIsMovie;
     }
 }

@@ -1,14 +1,15 @@
 package com.example.leon.movienightinandroid.api.moviedb;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 
 import com.example.leon.movienightinandroid.R;
 import com.example.leon.movienightinandroid.api.moviedb.model.Filter;
 import com.example.leon.movienightinandroid.api.moviedb.model.Page;
+import com.example.leon.movienightinandroid.states.DiscoverMoviesState;
+import com.example.leon.movienightinandroid.states.DiscoverTvState;
+import com.example.leon.movienightinandroid.states.MovieState;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -19,9 +20,7 @@ import javax.inject.Singleton;
 
 import io.reactivex.Observable;
 import io.reactivex.SingleObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
 /**
@@ -29,21 +28,17 @@ import io.reactivex.subjects.PublishSubject;
  */
 @Singleton
 public class PageRepository implements SingleObserver<Page> {
-    private final HashMap<String, Object> mQueryMap;
-    private final Context mContext;
-    private boolean isMovie;
-    private FilterState mMode;
-    private Page mPreviusPage;
     private Page mCurrentPage;
     private boolean isLoading;
-    private int mCurretResultPage = 0;
+    private int mCurrentNumberPage = 0;
 
 
     public PublishSubject<String> scrollerSubject = PublishSubject.create();
     public PublishSubject<Filter> filterSubject = PublishSubject.create();
     private PublishSubject<PageRepository> pageRepositorySubject = PublishSubject.create();
     public PublishSubject<Boolean> clearSubject = PublishSubject.create();
-
+    private PublishSubject<Boolean> loadingSubject = PublishSubject.create();
+    private MovieState mMovieState;
 
 
     public Observable<String> getScroller() {
@@ -58,168 +53,119 @@ public class PageRepository implements SingleObserver<Page> {
     public Observable<Boolean> clearObservable() {
         return clearSubject;
     }
+    public Observable<Boolean> getLoadObservable() {
+        return loadingSubject;
+    }git
 
 
+    public void setMovieState(MovieState movieState) {
+        clear();
+        loadingSubject.onNext(true);
+        mMovieState = movieState;
+        mMovieState.getSingle().subscribe(this);
+    }
+
+    private void clear() {
+        clearSubject.onNext(true);
+        mCurrentNumberPage = 0;
+    }
 
     @SuppressLint("CheckResult")
     @Inject
     public PageRepository(TheMovieService.Repository movieService, Context context) {
-        mContext = context;
-        mQueryMap = new HashMap<>();
-        isLoading = true;
-        movieService.discoverMovies(1, mQueryMap)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this);
-
-        setMode(FilterState.DISCOVER_MOVIES);
-
+        HashMap<String, Object> queryMap = new HashMap<>();
+        setMovieState(new DiscoverMoviesState(movieService, queryMap));
+        mMovieState.getSingle().subscribe(this);
+        System.out.println(PageRepository.class.getSimpleName());
 
         getScroller()
                 .sample(250, TimeUnit.MILLISECONDS)
-                .skipWhile(s -> isLoading)
+                .skipWhile(s -> isLoading || !hasNextPage())
                 .subscribe(s -> {
-            switch (getMode()) {
-                case DISCOVER_MOVIES:
-                    movieService.discoverMovies(getNextPage(), mQueryMap)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(this);
-                    break;
-
-                case DISCOVER_TV:
-                    movieService.discoverTv(getNextPage(), mQueryMap)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(this);
-                    break;
-
-                case SEARCH_MOVIES:
-                    movieService.searchMovie(getNextPage(), mQueryMap)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(this);
-                    break;
-
-                case SEARCH_TV:
-                    movieService.searchTv(getNextPage(), mQueryMap)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(this);
-                    break;
-
-                case SEARCH_ALL:
-                    movieService.searchMulti(getNextPage(), mQueryMap)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(this);
-                    break;
-
-                case FILTER:
-
-                    if (isMovie) {
-                        movieService.discoverMovies(getNextPage(), mQueryMap)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(this);
-                    } else {
-                        movieService.discoverTv(getNextPage(), mQueryMap)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(this);
-                    }
-
-                    break;
-            }
+                    mMovieState.loadPage(getNextPage());
+                    mMovieState.getSingle().subscribe(this);
         });
+
 
 
         getFilter().subscribe(filter -> {
-            isMovie = filter.isMovie();
-            mCurretResultPage = 0;
-            setMode(FilterState.FILTER);
-            clearSubject.onNext(true);
-
+            clear();
             switch (filter.getSortBy()) {
                 case Filter.POPULARITY:
-                    mQueryMap.put(TheMovieService.SORT_BY_QUERY, TheMovieService.SORT_BY_POPULARITY_DESC);
+                    queryMap.put(TheMovieService.SORT_BY_QUERY, TheMovieService.SORT_BY_POPULARITY_DESC);
                     break;
 
                 case Filter.RELEASE_DATE:
-                    mQueryMap.put(TheMovieService.SORT_BY_QUERY, TheMovieService.SORT_BY_RELEASE_DATE_DESC);
+                    queryMap.put(TheMovieService.SORT_BY_QUERY, TheMovieService.SORT_BY_RELEASE_DATE_DESC);
                     break;
 
                 case Filter.REVENUE:
-                    mQueryMap.put(TheMovieService.SORT_BY_QUERY, TheMovieService.SORT_BY_REVENUE_DESC);
+                    queryMap.put(TheMovieService.SORT_BY_QUERY, TheMovieService.SORT_BY_REVENUE_DESC);
                     break;
 
                 case Filter.AVERAGE_VOTES:
-                    mQueryMap.put(TheMovieService.SORT_BY_QUERY, TheMovieService.SORT_BY_VOTE_AVERAGE_DESC);
+                    queryMap.put(TheMovieService.SORT_BY_QUERY, TheMovieService.SORT_BY_VOTE_AVERAGE_DESC);
                     break;
 
                 case Filter.VOTES:
-                    mQueryMap.put(TheMovieService.SORT_BY_QUERY, TheMovieService.SORT_BY_VOTE_COUNT_DESC);
+                    queryMap.put(TheMovieService.SORT_BY_QUERY, TheMovieService.SORT_BY_VOTE_COUNT_DESC);
                     break;
 
             }
 
-            mQueryMap.put(TheMovieService.VOTE_COUNT_GTE_QUERY, filter.getVotes());
-
+            queryMap.put(TheMovieService.VOTE_COUNT_GTE_QUERY, filter.getVotes());
             String dateFrom = filter.getDateFrom(true);
             String dateTo = filter.getDateTo(true);
-            mQueryMap.put(TheMovieService.RELEASE_DATE_GTE_QUERY, dateTo);
-            mQueryMap.put(TheMovieService.RELEASE_DATE_LTE_QUERY, dateFrom);
-            mQueryMap.put(TheMovieService.VOTE_AVERAGE_GTE_QUERY, filter.getRating());
+            queryMap.put(TheMovieService.RELEASE_DATE_GTE_QUERY, dateTo);
+            queryMap.put(TheMovieService.RELEASE_DATE_LTE_QUERY, dateFrom);
+            queryMap.put(TheMovieService.VOTE_AVERAGE_GTE_QUERY, filter.getRating());
 
 
-            String[] genres = filter.getGenres();
-            List<String> listGenres = Arrays.asList(genres);
-            StringBuilder genresBuilder = new StringBuilder("");
+            StringBuilder genres = getGenres(filter.getGenres(), context);
 
-            String[] filterGenreItems = mContext.getResources().getStringArray(R.array.filter_genre_items);
-            int[] filterGenreIds = mContext.getResources().getIntArray(R.array.filter_genre_ids);
-
-
-            for (int i = 1; i < filterGenreItems.length; i++) {
-                String item = filterGenreItems[i];
-
-                if (listGenres.contains(item)) {
-                    int genreCode = filterGenreIds[i];
-                    genresBuilder.append(String.valueOf(genreCode)+",");
-                }
+            if (genres.length() > 0) {
+                genres.replace(genres.length()-1, genres.length(), "");
+                queryMap.put(TheMovieService.WITH_GENRES_QUERY, genres.toString());
             }
-
-            if (genresBuilder.length() > 0) {
-                genresBuilder.replace(genresBuilder.length()-1, genresBuilder.length(), "");
-                mQueryMap.put(TheMovieService.WITH_GENRES_QUERY, genresBuilder.toString());
-            }
-
-
-
-
 
 
             if (filter.isMovie()) {
-                movieService.discoverMovies(1, mQueryMap)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(this);
+                setMovieState(new DiscoverMoviesState(movieService, queryMap));
             } else {
-                movieService.discoverTv(1, mQueryMap)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(this);
+                setMovieState(new DiscoverTvState(movieService, queryMap));
             }
+
+            mMovieState.getSingle().subscribe(this);
 
 
         });
+    }
+
+    private StringBuilder getGenres(String[] genres, Context context) {
+        List<String> listGenres = Arrays.asList(genres);
+        StringBuilder genresBuilder = new StringBuilder("");
+
+        String[] filterGenreItems = context.getResources().getStringArray(R.array.filter_genre_items);
+        int[] filterGenreIds = context.getResources().getIntArray(R.array.filter_genre_ids);
+
+
+        for (int i = 1; i < filterGenreItems.length; i++) {
+            String item = filterGenreItems[i];
+
+            if (listGenres.contains(item)) {
+                int genreCode = filterGenreIds[i];
+                genresBuilder.append(String.valueOf(genreCode)+",");
+            }
+        }
+
+        return genresBuilder;
     }
 
 
 
 
     public int getNextPage() {
-       return mCurretResultPage+1;
+       return mCurrentNumberPage +1;
     }
 
     public Page getCurrentPage() {
@@ -227,15 +173,10 @@ public class PageRepository implements SingleObserver<Page> {
     }
 
 
-
-
-    public void setMode(FilterState mode) {
-        mMode = mode;
+    public boolean hasNextPage() {
+        return (getCurrentPage().total_pages > getCurrentPage().page);
     }
 
-    public FilterState getMode() {
-        return mMode;
-    }
 
     @Override
     public void onSubscribe(Disposable d) {
@@ -247,17 +188,18 @@ public class PageRepository implements SingleObserver<Page> {
         if (mCurrentPage == null) {
             mCurrentPage = page;
             isLoading = false;
+            loadingSubject.onNext(false);
             pageRepositorySubject.onNext(this);
-            mCurretResultPage = page.page;
-            System.out.println(page.toString());
+            mCurrentNumberPage = page.page;
+            System.out.println(page);
         } else {
-            if ( (!page.equals(mCurrentPage) && page.page > mCurrentPage.page) || mCurretResultPage == 0) {
-                mPreviusPage = mCurrentPage;
+            if ( (!page.equals(mCurrentPage) && page.page > mCurrentPage.page) || mCurrentNumberPage == 0) {
                 mCurrentPage = page;
                 isLoading = false;
+                loadingSubject.onNext(false);
                 pageRepositorySubject.onNext(this);
-                mCurretResultPage = page.page;
-                System.out.println(page.toString());
+                mCurrentNumberPage = page.page;
+                System.out.println(page);
             }
         }
 

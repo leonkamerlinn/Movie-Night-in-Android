@@ -47,13 +47,6 @@ public class TagLayout extends LinearLayout {
         display.getSize(deviceDisplay);
         deviceWidth = deviceDisplay.x;
 
-        for (int x = 0; x < getChildCount(); x++) {
-            CheckBox checkBox = (CheckBox) getChildAt(x);
-
-            checkBox.setOnClickListener(v -> {
-                Toast.makeText(v.getContext(), checkBox.getText(), Toast.LENGTH_SHORT).show();
-            });
-        }
     }
 
     public void setCheckedGenres(String[] genres) {
