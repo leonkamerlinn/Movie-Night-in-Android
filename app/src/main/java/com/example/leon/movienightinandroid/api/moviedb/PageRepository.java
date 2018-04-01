@@ -55,7 +55,7 @@ public class PageRepository implements SingleObserver<Page> {
     }
     public Observable<Boolean> getLoadObservable() {
         return loadingSubject;
-    }git
+    }
 
 
     public void setMovieState(MovieState movieState) {
