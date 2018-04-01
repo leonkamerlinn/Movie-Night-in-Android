@@ -50,9 +50,7 @@ android {
     }
 
     buildTypes.each {
-        it.buildConfigField 'String', 'MESSAGE', properties['message']
         it.buildConfigField 'String', 'API_KEY', properties['API_KEY']
-        it.buildConfigField 'String', 'ACCESS_TOKEN_V4_AUTH', properties['ACCESS_TOKEN_V4_AUTH']
     }
 
 
