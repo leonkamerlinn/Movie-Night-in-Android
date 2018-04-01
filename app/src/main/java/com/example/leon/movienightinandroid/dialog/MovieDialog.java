@@ -40,10 +40,12 @@ public class MovieDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Bundle bundle = getArguments();
         Movie movie = bundle.getParcelable(MOVIE_KEY);
-        System.out.println(movie);
-
         DialogMovieBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_movie, null, false);
-        binding.title.setText(movie.title);
+        binding.setLifecycleOwner(getActivity());
+        binding.setModel(movie.getMovieViewModel(getActivity().getApplication()));
+
+
+       /* binding.title.setText(movie.title);
 
         String imageUrl = TheMovieService.IMAGE_URL + movie.poster_path;
         Glide.with(getContext())
@@ -53,7 +55,7 @@ public class MovieDialog extends DialogFragment {
         binding.votesCount.setText(String.valueOf(movie.vote_count));
         binding.ratingBar.setRating(movie.vote_average);
         binding.date.setText(movie.release_date);
-        binding.description.setText(movie.overview);
+        binding.description.setText(movie.overview);*/
 
         return new AlertDialog.Builder(binding.getRoot().getContext())
                 .setView(binding.getRoot())

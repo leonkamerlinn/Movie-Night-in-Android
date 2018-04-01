@@ -67,6 +67,9 @@ public class MainActivity extends DaggerAppCompatActivity implements MovieRecycl
         movieRecyclerViewAdapter.setItemListener(this);
         pageRepository.getLoadObservable().subscribe(viewModel::setLoading);
 
+        if (savedInstanceState != null) {
+            pageRepository.restore();
+        }
     }
 
 

@@ -76,7 +76,6 @@ public class PageRepository implements SingleObserver<Page> {
         HashMap<String, Object> queryMap = new HashMap<>();
         setMovieState(new DiscoverMoviesState(movieService, queryMap));
         mMovieState.getSingle().subscribe(this);
-        System.out.println(PageRepository.class.getSimpleName());
 
         getScroller()
                 .sample(250, TimeUnit.MILLISECONDS)
@@ -191,7 +190,6 @@ public class PageRepository implements SingleObserver<Page> {
             loadingSubject.onNext(false);
             pageRepositorySubject.onNext(this);
             mCurrentNumberPage = page.page;
-            System.out.println(page);
         } else {
             if ( (!page.equals(mCurrentPage) && page.page > mCurrentPage.page) || mCurrentNumberPage == 0) {
                 mCurrentPage = page;
@@ -199,7 +197,6 @@ public class PageRepository implements SingleObserver<Page> {
                 loadingSubject.onNext(false);
                 pageRepositorySubject.onNext(this);
                 mCurrentNumberPage = page.page;
-                System.out.println(page);
             }
         }
 
@@ -208,5 +205,9 @@ public class PageRepository implements SingleObserver<Page> {
     @Override
     public void onError(Throwable e) {
         System.out.println(e.getMessage());
+    }
+
+    public void restore() {
+        pageRepositorySubject.onNext(this);
     }
 }

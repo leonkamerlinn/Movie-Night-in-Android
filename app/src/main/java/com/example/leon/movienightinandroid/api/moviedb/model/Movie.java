@@ -1,5 +1,6 @@
 package com.example.leon.movienightinandroid.api.moviedb.model;
 
+import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 import android.os.Handler;
@@ -32,14 +33,22 @@ public class Movie implements Comparable<Movie>, Parcelable {
     public String release_date;
     public String original_name;
     public String name;
+    public String media_type;
+
 
     public Movie() {
 
     }
 
 
+    public boolean hasReleaseDate() {
+        return (release_date != null);
 
+    }
 
+    public synchronized MovieViewModel getMovieViewModel(Application application) {
+        return new MovieViewModel(application, this);
+    }
 
     public Movie(Parcel in) {
         vote_count = in.readInt();

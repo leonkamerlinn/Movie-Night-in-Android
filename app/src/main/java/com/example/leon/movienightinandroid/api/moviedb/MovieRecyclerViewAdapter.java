@@ -40,7 +40,6 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
     @SuppressLint("CheckResult")
     @Inject
     public MovieRecyclerViewAdapter(Activity activity, PageRepository pageRepository) {
-        System.out.println(MovieRecyclerViewAdapter.class.getSimpleName());
         mActivity = activity;
         mMovies = new ArrayList<>();
         pageRepository.getObservable()
@@ -74,8 +73,8 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
         ItemMovieBinding binding = holder.binding;
         Movie movie = getMovies().get(position);
         binding.setLifecycleOwner((LifecycleOwner) mActivity);
-        binding.setModel(new MovieViewModel(movie));
-        System.out.println(movie.toString());
+
+        binding.setModel(movie.getMovieViewModel(mActivity.getApplication()));
     }
 
 
