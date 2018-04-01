@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="model"
+            type="com.example.leon.movienightinandroid.ui.sortfilter.SortFilterViewModel"/>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.example.leon.movienightinandroid.ui.sortfilter.SortFilterActivity">
+
+
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:title="@string/app_name"
+                android:background="@android:color/white"
+                app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+        </android.support.design.widget.AppBarLayout>
+
+    
+        <TextView
+            android:id="@+id/sortTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/sort"
+            android:gravity="center"
+            android:textColor="@color/colorAccent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appBarLayout"
+            style="@android:style/TextAppearance.DeviceDefault.Large" />
+    
+        <LinearLayout
+            android:id="@+id/topLinearLayout"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sortTextView">
+        
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/sort_by" />
+        
+        
+            <Spinner
+                android:id="@+id/sortSpinner"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:entries="@array/sort_items"
+                android:selectedItemPosition="@{model.itemSelected}"/>
+    
+        </LinearLayout>
+    
+        <TextView
+            android:id="@+id/filterTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:text="@string/filter"
+            android:textColor="@color/colorAccent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/topLinearLayout"
+            style="@android:style/TextAppearance.DeviceDefault.Large"/>
+    
+        <TextView
+            android:id="@+id/genreTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/genre"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/filterTextView" />
+        
+        
+            
+    
+        <com.example.leon.movienightinandroid.layout.TagLayout
+            app:setGenres="@{model.genres}"
+            android:id="@+id/tagLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/genreTextView"/>
+        
+    
+    
+        <LinearLayout
+            android:id="@+id/bottomLinearLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tagLayout">
+        
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/release_date" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/editTextDateFrom"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:ems="10"
+                    android:inputType="date"
+                    android:text="@{model.dateFromLiveData()}"/>
+
+                <EditText
+                    android:id="@+id/editTextDateTo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:ems="10"
+                    android:inputType="date"
+                    android:text="@{model.dateToLiveData()}"/>
+            </LinearLayout>
+
+
+    
+        </LinearLayout>
+    
+    
+        <LinearLayout
+            android:id="@+id/ratingLinearLayout"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bottomLinearLayout">
+        
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/rating" />
+        
+            <RatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:stepSize="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:isIndicator="false"
+                android:layout_marginEnd="16dp"
+                android:numStars="10"
+                android:rating="@{model.rating}"
+                style="?android:attr/ratingBarStyleSmall"/>
+    
+        </LinearLayout>
+    
+
+
+
+        <android.support.v7.widget.SwitchCompat
+            android:checked="@{model.isMovieChecked()}"
+            android:id="@+id/movieSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{model.movieSwitchLiveData()}"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:paddingBottom="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ratingLinearLayout"
+            style="@android:style/TextAppearance.Medium"/>
+
+
+        <LinearLayout
+            android:id="@+id/votesLayout"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/movieSwitch">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/votes" />
+
+            <EditText
+                android:id="@+id/numberOfVotes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/movieSwitch"
+                android:inputType="number"
+                android:text="@{model.votes}"/>
+
+        </LinearLayout>
+
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

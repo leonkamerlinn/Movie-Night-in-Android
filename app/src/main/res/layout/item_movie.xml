@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="model"
+            type="com.example.leon.movienightinandroid.api.moviedb.model.MovieViewModel" />
+
+    </data>
+	
+	<android.support.constraint.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+
+		<android.support.v7.widget.CardView
+			android:layout_margin="10dp"
+			android:padding="10dp"
+			android:id="@+id/cardView"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent">
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical">
+
+
+				<TextView
+					android:paddingBottom="10dp"
+					android:maxLines="1"
+					android:id="@+id/sortTextView"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:gravity="center"
+					android:text="@{model.title}" />
+
+
+				<ImageView
+                    app:imageLoad="@{model.imageUrl}"
+					android:layout_gravity="center"
+					android:src="@mipmap/launcher"
+					android:id="@+id/imageView"
+					android:scaleType="centerCrop"
+					android:layout_width="match_parent"
+					android:layout_height="200dp" />
+
+
+			</LinearLayout>
+
+
+		</android.support.v7.widget.CardView>
+
+		
+
+		
+	</android.support.constraint.ConstraintLayout>
+</layout>
