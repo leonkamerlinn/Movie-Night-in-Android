@@ -8,14 +8,14 @@
 
         <variable
             name="model"
-            type="com.example.leon.movienightinandroid.ui.sortfilter.SortFilterViewModel"/>
+            type="com.movie.search.movienightinandroid.ui.sortfilter.SortFilterViewModel"/>
     </data>
 
     <android.support.constraint.ConstraintLayout
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.example.leon.movienightinandroid.ui.sortfilter.SortFilterActivity">
+        tools:context="com.movie.search.movienightinandroid.ui.sortfilter.SortFilterActivity">
 
 
 
@@ -118,7 +118,7 @@
         
             
     
-        <com.example.leon.movienightinandroid.layout.TagLayout
+        <com.movie.search.movienightinandroid.layout.TagLayout
             app:setGenres="@{model.genres}"
             android:id="@+id/tagLayout"
             android:layout_width="wrap_content"

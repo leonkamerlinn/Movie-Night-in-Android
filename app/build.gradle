@@ -8,7 +8,7 @@ properties.load(new FileInputStream(keystore))
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.example.leon.movienightinandroid"
+        applicationId "com.movie.search.movienightinandroid"
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 1

@@ -5,7 +5,7 @@
     <data>
         <variable
             name="model"
-            type="com.example.leon.movienightinandroid.api.moviedb.model.MovieViewModel" />
+            type="com.movie.search.movienightinandroid.api.moviedb.model.MovieViewModel" />
 
     </data>
 	
