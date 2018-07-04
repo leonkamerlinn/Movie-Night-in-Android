@@ -123,7 +123,7 @@ dependencies {
     implementation "android.arch.lifecycle:common-java8:1.1.1"
 
     // RxJava support for Room (use 1.1.0-alpha1 for latest alpha)
-    implementation "android.arch.persistence.room:rxjava2:1.1.0"
+    implementation "android.arch.persistence.room:rxjava2:1.1.1"
 
     // ReactiveStreams support for LiveData
     implementation "android.arch.lifecycle:reactivestreams:1.1.1"
